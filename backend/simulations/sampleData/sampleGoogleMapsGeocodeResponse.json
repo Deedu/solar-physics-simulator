@@ -1,0 +1,94 @@
+[
+  {
+    "address_components": [
+      {
+        'long_name': '7',
+        'short_name': '7',
+        "types": [
+          'street_number'
+        ]
+      },
+      {
+        'long_name': 'Station Street',
+        'short_name': 'Station St',
+        'types': [
+          'route'
+        ]
+      },
+      {
+        'long_name': 'Old Toronto',
+        'short_name': 'Old Toronto',
+        'types': [
+          'political',
+          'sublocality',
+          'sublocality_level_1'
+        ]
+      },
+      {
+        'long_name': 'Toronto',
+        'short_name': 'Toronto',
+        'types': [
+          'locality',
+          'political'
+        ]
+      },
+      {
+        'long_name': 'Toronto',
+        'short_name': 'Toronto',
+        'types': [
+          'administrative_area_level_2',
+          'political'
+        ]
+      },
+      {
+        'long_name': 'Ontario',
+        'short_name': 'ON',
+        'types': [
+          'administrative_area_level_1',
+          'political'
+        ]
+      },
+      {
+        'long_name': 'Canada',
+        'short_name': 'CA',
+        'types': [
+          'country',
+          'political'
+        ]
+      },
+      {
+        'long_name': 'M5J 1C3',
+        'short_name': 'M5J 1C3',
+        'types': [
+          'postal_code'
+        ]
+      }
+    ],
+    'formatted_address': '7 Station St, Toronto, ON M5J 1C3, Canada',
+    'geometry': {
+      'location': {
+        'lat': 43.6443398,
+        'lng': -79.3836206
+      },
+      'location_type': 'ROOFTOP',
+      'viewport': {
+        'northeast': {
+          'lat': 43.6457760802915,
+          'lng': -79.3823080697085
+        },
+        'southwest': {
+          'lat': 43.6430781197085,
+          'lng': -79.3850060302915
+        }
+      }
+    },
+    'place_id': 'ChIJCV_LDNQ0K4gRahGKY31CsnQ',
+    'plus_code': {
+      'compound_code': 'JJV8+PH Toronto, ON, Canada',
+      'global_code': '87M2JJV8+PH'
+    },
+    'types': [
+      'street_address'
+    ]
+  }
+]
