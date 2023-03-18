@@ -4,7 +4,7 @@
   "solar": {
     "length": 4.5,
     "width": 2,
-    "solar_efficiency": 0.05
+    "solar_efficiency": 0.15
   },
   "water_pump": {
     "max_flow_rate": 50
