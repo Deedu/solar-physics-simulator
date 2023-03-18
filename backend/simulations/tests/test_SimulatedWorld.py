@@ -1,7 +1,7 @@
 import pytest
 import json
 # noinspection PyUnresolvedReferences
-from SimulatedWorld import SimulatedWorld
+from simulationObjects.SimulatedWorld import SimulatedWorld
 
 
 class TestSimulatedWorld:

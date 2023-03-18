@@ -1,4 +1,12 @@
 {
   "address": "7 Station St, Toronto, Ontario",
-  "optional-date-of-simulation": "10-March-2023"
+  "optional_date_of_simulation": "10-March-2023",
+  "solar": {
+    "length": 4.5,
+    "width": 2,
+    "solar_efficiency": 0.05
+  },
+  "water_pump": {
+    "max_flow_rate": 50
+  }
 }

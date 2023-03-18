@@ -1,0 +1,67 @@
+class SolarCollector:
+    _surface_area: float = None  # m^2
+    _water_temp_in: float = 0  # ºC
+    _water_temp_out: float = 0  # ºC
+    _water_flow_rate: float = 0  # L/min rate
+    _energy_captured_by_solar: float = 0  # Watts
+    _solar_efficiency: float = None  # give as a decimal, e.g. 0.05 for 5%
+
+    def __init__(self, config):
+        try:
+            self._surface_area = config["length"] * config["width"]
+            self._solar_efficiency = config["solar_efficiency"]
+        except KeyError as e:
+            raise KeyError("Incorrect config passed to SolarCollector", e)
+
+    def add_one_hour_solar_energy(self, DNI_value_over_period, flow_rate):
+        """
+        :param DNI_value_over_period: given in W/m^2 - proxy for energy given to panel.
+                                      not actually correct since it is for 90º angle with sun, maximum absorption
+                                      but you have to make some simplifying assumptions somehwere,
+                                      and it is directionally right 🤷
+
+        :param flow_rate: given in L/min - shows how much water is being moved
+        :return: #TODO - determine energy out
+
+        Reasoning: We get DNI in, W/m^2, which is power per unit of area.
+        This collector has a given efficiency of turning that solar energy into
+        thermal energy in the water. I may not know that conversion rate very well
+        (it changes over time with relative temperatures of water, condition of panels, etc.)
+        but I could make a conservative assumption and run with it.
+
+        I take the DNI in, multiply by efficiency of conversion, that gives me the
+        energy that I am adding to the system, through the water.
+
+        How I allocate that energy depends on the flow rate, i.e. slow moving water will get hotter
+        and fast moving water will not get as hot, but a greater volume of water will be heated
+        """
+
+        raise NotImplementedError
+
+    def get_loggable_metrics(self):
+        """
+        Returns JSON of what to log.
+
+        NOTE - Json Keys must be unique - prefix with object name to be safe
+        :return: Dictionary of metric names and metric values
+        """
+        return {"water_temp_in": self._water_temp_in,
+                "water_temp_out": self._water_temp_out,
+                "water_flow_rate": self._water_flow_rate,
+                "energy_captured_by_solar": self._energy_captured_by_solar,
+                "solar_efficiency": self._solar_efficiency
+                }
+
+    def __hash__(self):
+        """
+        Just so I can use this obj as a key in dict
+        :return:
+        """
+        return hash(self._surface_area)
+
+    def __eq__(self, other):
+        """
+        Just so I can use this obj as a key in dict
+        :return:
+        """
+        return self._surface_area == other._surface_area

@@ -1,11 +1,7 @@
-import googlemaps
 import os
 import json
-import requests
 from dotenv import load_dotenv
-import datetime
-from dateutil.relativedelta import relativedelta
-from SimulatedWorld import SimulatedWorld
+from simulationObjects.SimulatedWorld import SimulatedWorld
 
 load_dotenv()  # only relevant for local - P4 cleanup later
 
@@ -22,6 +18,9 @@ def make_world():
     world_1 = SimulatedWorld(sample_request_data)
     world_1.generate_lat_long()
     world_1.get_weather_data()
+    # world_1.write_out_simulation_results()
+    print("STARTING SIMULATION")
+    world_1.start_simulation()
 
 
 if __name__ == "__main__":
