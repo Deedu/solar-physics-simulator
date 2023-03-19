@@ -8,5 +8,106 @@
   },
   "water_pump": {
     "max_flow_rate": 50
+  },
+  "water_container": {
+    "water_capacity": 200,
+    "percent_of_thermal_energy_absorbed_from_pipes": 0.75,
+    "percent_of_thermal_energy_lost_to_waste_per_hour": 0.02,
+    "temperature_of_external_water_source": 7,
+    "consumption_pattern": {
+      "00:00": {
+        "water_used": 0,
+        "average_temperature_of_water_used": 0
+      },
+      "01:00": {
+        "water_used": 0,
+        "average_temperature_of_water_used": 0
+      },
+      "02:00": {
+        "water_used": 0,
+        "average_temperature_of_water_used": 0
+      },
+      "03:00": {
+        "water_used": 0,
+        "average_temperature_of_water_used": 0
+      },
+      "04:00": {
+        "water_used": 0,
+        "average_temperature_of_water_used": 0
+      },
+      "05:00": {
+        "water_used": 0,
+        "average_temperature_of_water_used": 0
+      },
+      "06:00": {
+        "water_used": 0,
+        "average_temperature_of_water_used": 0
+      },
+      "07:00": {
+        "water_used": 55,
+        "average_temperature_of_water_used": 38
+      },
+      "08:00": {
+        "water_used": 10,
+        "average_temperature_of_water_used": 50
+      },
+      "09:00": {
+        "water_used": 10,
+        "average_temperature_of_water_used": 50
+      },
+      "10:00": {
+        "water_used": 20,
+        "average_temperature_of_water_used": 30
+      },
+      "11:00": {
+        "water_used": 0,
+        "average_temperature_of_water_used": 50
+      },
+      "12:00": {
+        "water_used": 60,
+        "average_temperature_of_water_used": 15
+      },
+      "13:00": {
+        "water_used": 0,
+        "average_temperature_of_water_used": 50
+      },
+      "14:00": {
+        "water_used": 0,
+        "average_temperature_of_water_used": 50
+      },
+      "15:00": {
+        "water_used": 5,
+        "average_temperature_of_water_used": 50
+      },
+      "16:00": {
+        "water_used": 10,
+        "average_temperature_of_water_used": 50
+      },
+      "18:00": {
+        "water_used": 10,
+        "average_temperature_of_water_used": 50
+      },
+      "19:00": {
+        "water_used": 35,
+        "average_temperature_of_water_used": 65
+      },
+      "20:00": {
+        "water_used": 10,
+        "average_temperature_of_water_used": 50
+      },
+      "21:00": {
+        "water_used": 10,
+        "average_temperature_of_water_used": 50
+      },
+      "22:00": {
+        "water_used": 0,
+        "average_temperature_of_water_used": 50
+      },
+      "23:00": {
+        "water_used": 0,
+        "average_temperature_of_water_used": 50
+      }
+
+    }
   }
 }

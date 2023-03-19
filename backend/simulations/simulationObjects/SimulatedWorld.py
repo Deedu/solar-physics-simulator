@@ -69,9 +69,15 @@ class SimulatedWorld:
             # Pump Setup
             self._water_pump = WaterPump(configuration["water_pump"])
 
+            # Water Container Setup
+            self._water_container = WaterContainer(configuration["water_container"])
+
             # Logging Setup
             self._loggable_parts_of_system.append(
-                self._solar_collector, self._water_pump)  # TODO - update for all objects later water pump & water tank
+                self._solar_collector)
+            self._loggable_parts_of_system.append(self._water_pump)
+            self._loggable_parts_of_system.append(self._water_container)
+
         except KeyError as e:
             raise KeyError("Incorrect config passed in to SimulatedWorld", e)
 
@@ -89,14 +95,23 @@ class SimulatedWorld:
     def run_one_hourly_iteration_of_simulation(self):
         # Filter Historical Dataset to get an average to use today
         print(self._current_time_in_simulation)
+        current_hour_of_day = self._current_time_in_simulation[-5:]
         month_day_hour_formatted = self._current_time_in_simulation[5:]
         same_day_time_all_years_in_dataset_mask = self._pandas_data.index.str.contains(month_day_hour_formatted)
         same_day_time_all_years_in_dataset = self._pandas_data[same_day_time_all_years_in_dataset_mask]
         dni_value_for_hour_in_simulation = same_day_time_all_years_in_dataset.loc[:, 'DNI_value'].mean()
         self._current_direct_normal_irradiance = dni_value_for_hour_in_simulation
 
-        self._solar_collector.add_one_hour_solar_energy(self._current_direct_normal_irradiance,
-                                                        self._water_pump.get_flow_rate())
+        # note, pump uses retroactive data - it uses temperature for the previous hour to determine flow rate for
+        # the current hour. This feedback loop is faster in real life, but again, directionally right.
+        flow_rate_for_the_hour = self._water_pump.get_flow_rate()
+
+        temperature_of_water_in_pipes = self._solar_collector.add_one_hour_solar_energy(
+            self._current_direct_normal_irradiance, flow_rate_for_the_hour,
+            self._water_container.outgoing_water_temperature
+        )
+
+        self._water_container.run_hour_of_usage(temperature_of_water_in_pipes, flow_rate_for_the_hour, current_hour_of_day=current_hour_of_day)
 
         # print(same_day_time_all_years_in_dataset)
         print(f"Mean DNI for {month_day_hour_formatted} is: {dni_value_for_hour_in_simulation}")

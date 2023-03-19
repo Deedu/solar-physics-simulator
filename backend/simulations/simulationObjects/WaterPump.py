@@ -2,6 +2,7 @@ class WaterPump:
     _min_flow_rate: float = 0
     _max_flow_rate: float = None
     _current_flow_rate: float = None
+    _percent_of_maximum_flow_rate: float = 0
 
     def __init__(self, config):
         try:
@@ -15,7 +16,18 @@ class WaterPump:
         return self._current_flow_rate
 
     def adjust_flow_to_current_state(self):
+
+        self._percent_of_maximum_flow_rate = self._current_flow_rate/self._max_flow_rate
         raise NotImplementedError
+
+    def get_loggable_metrics(self):
+        """
+        Returns JSON of what to log.
+
+        NOTE - Json Keys must be unique - prefix with object name to be safe
+        :return: Dictionary of metric names and metric values
+        """
+        return {"percent_water_pump_flow_rate_used": self._percent_of_maximum_flow_rate}
     def __hash__(self):
         """
         Just so I can use this obj as a key in dict
