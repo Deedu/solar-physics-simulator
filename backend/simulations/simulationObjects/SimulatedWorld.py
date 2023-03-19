@@ -21,7 +21,7 @@ class SimulatedWorld:
     _num_solar_panels: int = None
     _width_solar_panels: int = None
     _height_solar_panels: int = None
-    _current_direct_normal_irradiance: float = None
+    _current_direct_normal_irradiance: float = 0
     _latitude: float = None
     _longitude: float = None
     _address_of_system: str = None
@@ -29,7 +29,7 @@ class SimulatedWorld:
     _pandas_data: pd.DataFrame = None
     _date_of_simulation_start: datetime = None
     _current_time_in_simulation: str = None
-    _num_hours_to_simulate: int = 24 * 365  # 1 year default
+    _num_hours_to_simulate: int = 24 * 365  # 1 year default 24hrs * 365 days
     _solar_collector: SolarCollector = None
     _water_container: WaterContainer = None
     _water_pump: WaterPump = None
@@ -88,12 +88,11 @@ class SimulatedWorld:
 
         self.write_output_file_header()
 
-        num_iterations = 24 * 365  # 1 Year, 24hrs * 365 days
-        for i in range(num_iterations):
+        for i in range(self._num_hours_to_simulate):
             current_time = time.time()
             print(
-                f"Simulation running for: {round(current_time - start_time,3)} seconds on iteration {i}/{num_iterations},"
-                f" avg speed per iteration: {round((current_time - start_time)/i,7)}")
+                f"Simulation running for: {round(current_time - start_time, 3)} seconds on iteration {i}/{self._num_hours_to_simulate},"
+                f" avg speed per iteration: {round((current_time - start_time) / i, 7)}")
 
             self._current_time_in_simulation = self._meteo_weather_data["timestamps"][i]
             self.write_out_simulation_results()
@@ -106,12 +105,15 @@ class SimulatedWorld:
     def run_one_hourly_iteration_of_simulation(self):
         # Filter Historical Dataset to get an average to use today
         print(self._current_time_in_simulation)
-        current_hour_of_day = self._current_time_in_simulation[-5:]
-        month_day_hour_formatted = self._current_time_in_simulation[5:]
+        current_hour_of_day = self._current_time_in_simulation[-5:]  # e.g. 01:00
+        month_day_hour_formatted = self._current_time_in_simulation[5:]  # e.g. 03-10T22:00
         same_day_time_all_years_in_dataset_mask = self._pandas_data.index.str.contains(month_day_hour_formatted)
         same_day_time_all_years_in_dataset = self._pandas_data[same_day_time_all_years_in_dataset_mask]
         dni_value_for_hour_in_simulation = same_day_time_all_years_in_dataset.loc[:, 'DNI_value'].mean()
         self._current_direct_normal_irradiance = dni_value_for_hour_in_simulation
+
+        # Update timestamp to be today, hardcoded to take 2000's date and make it in the 2020's by adding 20 years
+        self._current_time_in_simulation = self._current_time_in_simulation.replace("200", "202")
 
         # note, pump uses retroactive data - it uses temperature for the previous hour to determine flow rate for
         # the current hour. This feedback loop is faster in real life, but again, directionally right.

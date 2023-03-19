@@ -7,7 +7,7 @@
     "solar_efficiency": 0.15
   },
   "water_pump": {
-    "max_flow_rate": 50,
+    "max_flow_rate": 20,
     "maximum_temp_difference_between_water_incoming_and_outgoing_solar": 4,
     "minimum_temp_difference_between_water_incoming_and_outgoing_solar": 2
   },

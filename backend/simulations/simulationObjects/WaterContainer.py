@@ -13,7 +13,7 @@ class WaterContainer:
     _average_temp_of_water_sent_out_of_water_container: float = 0  # ºC
     _energy_sent_out_of_water_container: float = 0  # ºC
     _efficiency_of_traditional_boiler: float = None  # % expressed as float, e.g. 5% is 0.05
-    _energy_consumed_by_heater: float = None  # J used over last hour
+    _energy_consumed_by_heater: float = 0  # J used over last hour
     _minimum_average_water_temp: float = 50  # ºC floor temp of water to prevent bacteria growth
     _energy_absorbed_from_pipes: float = 0  # J energy over last hour
 
