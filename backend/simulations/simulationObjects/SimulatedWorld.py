@@ -13,6 +13,7 @@ import pandas as pd
 from .SolarCollector import SolarCollector
 from .WaterPump import WaterPump
 from .WaterContainer import WaterContainer
+import time
 
 
 class SimulatedWorld:
@@ -83,14 +84,24 @@ class SimulatedWorld:
 
     def start_simulation(self):
 
+        start_time = time.time()
+
         self.write_output_file_header()
 
-        for i in range(24 * 365):
+        num_iterations = 24 * 365  # 1 Year, 24hrs * 365 days
+        for i in range(num_iterations):
+            current_time = time.time()
+            print(
+                f"Simulation running for: {round(current_time - start_time,3)} seconds on iteration {i}/{num_iterations},"
+                f" avg speed per iteration: {round((current_time - start_time)/i,7)}")
+
             self._current_time_in_simulation = self._meteo_weather_data["timestamps"][i]
             self.write_out_simulation_results()
             self.run_one_hourly_iteration_of_simulation()
 
-        raise NotImplementedError
+        completion_time = time.time()
+        minutes_elapsed = round((completion_time - start_time) / 60, 2)
+        print(f"Simulation took: {minutes_elapsed} mins")
 
     def run_one_hourly_iteration_of_simulation(self):
         # Filter Historical Dataset to get an average to use today
@@ -106,12 +117,22 @@ class SimulatedWorld:
         # the current hour. This feedback loop is faster in real life, but again, directionally right.
         flow_rate_for_the_hour = self._water_pump.get_flow_rate()
 
+        # Add in solar energy from the hour
+        starting_temperature_into_solar = self._water_container.outgoing_water_temperature
         temperature_of_water_in_pipes = self._solar_collector.add_one_hour_solar_energy(
             self._current_direct_normal_irradiance, flow_rate_for_the_hour,
-            self._water_container.outgoing_water_temperature
+            starting_temperature_into_solar
         )
 
-        self._water_container.run_hour_of_usage(temperature_of_water_in_pipes, flow_rate_for_the_hour, current_hour_of_day=current_hour_of_day)
+        # Add solar energy to water container through pipes, remove energy from water usage
+        self._water_container.run_hour_of_usage(temperature_of_water_in_pipes, flow_rate_for_the_hour,
+                                                current_hour_of_day=current_hour_of_day)
+
+        # Adjust water flow from temperature difference between what is in pipes and what is in solar panel.
+        print(
+            f"Starting flow rate: {flow_rate_for_the_hour}, starting temp into solar {starting_temperature_into_solar}, ending temp in pipes {temperature_of_water_in_pipes}, ending temp water container {self._water_container.outgoing_water_temperature}")
+        self._water_pump.adjust_flow_to_current_state(self._water_container.outgoing_water_temperature,
+                                                      temperature_of_water_in_pipes)
 
         # print(same_day_time_all_years_in_dataset)
         print(f"Mean DNI for {month_day_hour_formatted} is: {dni_value_for_hour_in_simulation}")
@@ -187,9 +208,6 @@ class SimulatedWorld:
         row_of_data = [self._current_time_in_simulation, self._current_direct_normal_irradiance]
         for i in range(len(row_of_data), self._num_metrics_logged + 1):
             row_of_data.append(0)
-
-        print("header dict")
-        print(self._header_for_output_file)
 
         for loggableObject in self._loggable_parts_of_system:
             loggableJSONResponse = loggableObject.get_loggable_metrics()

@@ -16,7 +16,7 @@ class SolarCollector:
         except KeyError as e:
             raise KeyError("Incorrect config passed to SolarCollector", e)
 
-    def add_one_hour_solar_energy(self, DNI_value_over_period, flow_rate, water_temp_in):
+    def add_one_hour_solar_energy(self, DNI_value_over_period: float, flow_rate, water_temp_in):
         """
         :param DNI_value_over_period: given in W/m^2 - proxy for energy given to panel.
                                       not actually correct since it is for 90º angle with sun, maximum absorption
@@ -67,7 +67,6 @@ class SolarCollector:
         """
         return {"water_temp_into_solar": self._water_temp_in,
                 "water_temp_out_of_solar": self._water_temp_out,
-                "water_flow_rate": self._water_flow_rate,
                 "energy_captured_by_solar": self._energy_captured_by_solar,
                 "solar_efficiency": self._solar_efficiency
                 }

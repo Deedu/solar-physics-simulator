@@ -5,7 +5,7 @@ The idea for the system is fairly straightforward. Model a system that:
 2. Puts that energy into water via heat transfer into pipes that run through the solar panels
 3. Pumps that newly heated water into a water tank, where it is stored
 4. Consumes some of that water over time through daily activities and continues to add energy/heat to the system from solar activity
-5. Logs metrics throughout the process that monitor the process to inform later decision making (analytics)
+5. Logs metrics throughout the process that monitor the system to inform later decision making (analytics)
 
 # Potential Use Cases
 
@@ -16,10 +16,17 @@ The idea for the system is fairly straightforward. Model a system that:
   * Could model one large system versus many small ones geographically spread out a bit. Maybe diversification helps.
 * Optimizing consumer behavior
   * When to shower, how much to shower, etc. to minimize energy costs and reduce need for traditional energy sources
+* Optimizing hardware/system design
+  * How big should solar panels be relative to water tank, how powerful should the pump be, etc.
 
 # Architecture
 
 ![Diagram showing the various services that produce the simulation](/Users/daviddaugela/PycharmProjects/solar-physics-simulator/architecture-graphs/solar_physics_simulator.png "Architecture Diagram")
+
+# A Few Key Assumptions
+
+* Tank is always kept full on an hourly basis, water removed is filled with tap/external source
+
 
 # Potential Improvements
 
@@ -29,4 +36,7 @@ The idea for the system is fairly straightforward. Model a system that:
   * Use Global Horizontal Irradiance (GHI)  instead of Direct Normal Irradiation (DNI)
     * Factoring in angle of sun throughout the day (lower efficiency as you get further from 90º normal to the sun)
   * Making flow rate continous instead of fixed over a period
+  * Stricter/better use of boiler, right now only kicks in after water usage but could temperature could decline overnight as well
+* Metrics
+  * More detailed tracking of loss/inefficiency in the system
 

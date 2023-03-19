@@ -7,13 +7,17 @@
     "solar_efficiency": 0.15
   },
   "water_pump": {
-    "max_flow_rate": 50
+    "max_flow_rate": 50,
+    "maximum_temp_difference_between_water_incoming_and_outgoing_solar": 4,
+    "minimum_temp_difference_between_water_incoming_and_outgoing_solar": 2
   },
   "water_container": {
     "water_capacity": 200,
-    "percent_of_thermal_energy_absorbed_from_pipes": 0.75,
+    "percent_of_thermal_energy_absorbed_from_pipes": 0.85,
     "percent_of_thermal_energy_lost_to_waste_per_hour": 0.02,
     "temperature_of_external_water_source": 7,
+    "efficiency_of_traditional_boiler": 0.75,
+    "minimum_average_water_temperature": 50,
     "consumption_pattern": {
       "00:00": {
         "water_used": 0,

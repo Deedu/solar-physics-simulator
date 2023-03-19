@@ -41,7 +41,7 @@ with Diagram("Solar Physics Simulator", show=False, graph_attr=graph_attr
         # firestoreIcon = Firestore("Database")
         with Cluster("Request Handling"):
             request_handling = [AppEngine("NestJS Backend")]
-        with Cluster("Data Store"):
+        with Cluster("BigQuery"):
             bigqueryIcon = BigQuery("Sim Database")
 
         bigqueryIcon >> Edge() \
