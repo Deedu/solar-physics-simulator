@@ -30,6 +30,16 @@ class WaterContainer:
                 }
 
     def run_hour_of_usage(self, temp_in_pipes, flow_rate_in_pipes, current_hour_of_day):
+
+        # TODO finish this
+        #  take difference between temp_in_pipes and average temp to get ºC difference
+        #  multiply by flow rate to get total energy difference flowed over water container
+        #  multiply energy by % absorption
+        #  multiply absorbed eenergy by (1-loss%)
+        #  increase temp as appropriate
+        # factor in water usage and that temp change (energy loss by giving out hot water and replacing with cold)
+        #  factor in external heater system
+
         raise NotImplementedError
     def __hash__(self):
         """
