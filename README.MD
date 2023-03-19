@@ -21,7 +21,7 @@ The idea for the system is fairly straightforward. Model a system that:
 
 # Architecture
 
-![Diagram showing the various services that produce the simulation](/Users/daviddaugela/PycharmProjects/solar-physics-simulator/architecture-graphs/solar_physics_simulator.png "Architecture Diagram")
+![Diagram showing the various services that produce the simulation](./architecture-graphs/solar_physics_simulator.png "Architecture Diagram")
 
 # A Few Key Assumptions
 
