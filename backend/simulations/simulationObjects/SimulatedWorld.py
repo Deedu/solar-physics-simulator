@@ -1,5 +1,6 @@
 import _io
 import csv
+import uuid
 
 import googlemaps
 import os
@@ -9,10 +10,12 @@ from dotenv import load_dotenv
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import pandas as pd
+from google.cloud import bigquery
 
 from .SolarCollector import SolarCollector
 from .WaterPump import WaterPump
 from .WaterContainer import WaterContainer
+from .CONSTANTS import BIGQUERY_TABLE_ID, OUTPUT_METRICS_FILE_PATH
 import time
 
 
@@ -37,9 +40,11 @@ class SimulatedWorld:
     _output_csv_file: _io.FileIO = None
     _output_csv_file_writer: csv.writer = None
     _written_output_header: bool = False
-    _header_for_output_file: dict = {"Timestamp": 0, "DNI_Value": 1}
-    _header_as_list_for_output_file: list = ["Timestamp", "DNI_Value"]
+    _header_for_output_file: dict = {"uuid": 0, "Timestamp": 1, "DNI_Value": 2}
+    _header_as_list_for_output_file: list = ["uuid", "Timestamp", "DNI_Value"]
     _num_metrics_logged: int = None
+    _simulation_uuid: uuid = None
+    _bigquery_client: bigquery = None
 
     def __init__(self, configuration):
         """
@@ -52,16 +57,31 @@ class SimulatedWorld:
             self._address_of_system = configuration["address"]
             self.gmaps = googlemaps.Client(key=os.getenv('GOOGLE_MAPS_API_KEY'))
 
+            # BigQuery Connection
+            self._bigquery_client = bigquery.Client()
+
             # Decide Start Date
             if configuration.get("optional-date-of-simulation", False):
                 self._date_of_simulation_start = datetime.strptime(configuration["optional_date_of_simulation"],
                                                                    "%d-%B-%Y")
+            else:
+                self._date_of_simulation_start = datetime.strptime(datetime.now().strftime("%d-%B-%Y"), "%d-%B-%Y")
+
+            # Decide uuid
+            if configuration.get("simulation_uuid", False):
+                self._simulation_uuid = configuration["simulation_uuid"]
+            else:
+                self._simulation_uuid = uuid.uuid4()
+
+            # Get num hours to simulate, defaults to 1 year (24*365)
+            if configuration.get("num_hours_to_simulate", False):
+                self._num_hours_to_simulate = configuration["num_hours_to_simulate"]
 
             # How long to simulate - important factor on cost/time to process
             self._num_hours_to_simulate = configuration.get("num_hours_to_simulate", self._num_hours_to_simulate)
 
             # Setup logging metrics locally
-            self._output_csv_file = open('sampleData/sampleSimulationOutput.csv', 'w')
+            self._output_csv_file = open(OUTPUT_METRICS_FILE_PATH, 'w')
             self._output_csv_file_writer = csv.writer(self._output_csv_file)
 
             # Solar Setup
@@ -92,7 +112,7 @@ class SimulatedWorld:
             current_time = time.time()
             print(
                 f"Simulation running for: {round(current_time - start_time, 3)} seconds on iteration {i}/{self._num_hours_to_simulate},"
-                f" avg speed per iteration: {round((current_time - start_time) / i, 7)}")
+                f" avg speed per iteration: {round((current_time - start_time) / (i + 1), 7)}")
 
             self._current_time_in_simulation = self._meteo_weather_data["timestamps"][i]
             self.write_out_simulation_results()
@@ -207,7 +227,7 @@ class SimulatedWorld:
     def write_out_simulation_results(self):
 
         # TODO - fix hardcoded
-        row_of_data = [self._current_time_in_simulation, self._current_direct_normal_irradiance]
+        row_of_data = [self._simulation_uuid, self._current_time_in_simulation, self._current_direct_normal_irradiance]
         for i in range(len(row_of_data), self._num_metrics_logged + 1):
             row_of_data.append(0)
 
@@ -218,3 +238,22 @@ class SimulatedWorld:
                 row_of_data[self._header_for_output_file[loggableObject][key]] = value
 
         self._output_csv_file_writer.writerow(row_of_data)
+
+    def upload_results_to_bigquery(self):
+
+        table_id = BIGQUERY_TABLE_ID
+        job_config = bigquery.LoadJobConfig(
+            source_format=bigquery.SourceFormat.CSV, skip_leading_rows=1, autodetect=True,
+        )
+
+        with open(OUTPUT_METRICS_FILE_PATH, "rb") as source_file:
+            job = self._bigquery_client.load_table_from_file(source_file, table_id, job_config=job_config)
+
+        job.result()
+
+        table = self._bigquery_client.get_table(table_id)  # Make an API request.
+        print(
+            "Loaded {} rows and {} columns to {}".format(
+                table.num_rows, len(table.schema), table_id
+            )
+        )

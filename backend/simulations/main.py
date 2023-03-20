@@ -21,7 +21,14 @@ def make_world():
     # world_1.write_out_simulation_results()
     print("STARTING SIMULATION")
     world_1.start_simulation()
+    world_1.upload_results_to_bigquery()
 
+def write_results():
+    sample_request_file = open('sampleData/sampleCorrectClientRequest.json')
+    sample_request_data = json.load(sample_request_file)
+    world_1 = SimulatedWorld(sample_request_data)
+    world_1.upload_results_to_bigquery()
 
 if __name__ == "__main__":
     make_world()
+    # write_results()
