@@ -1,8 +1,8 @@
 {
   "address": "7 Station St, Toronto, Ontario",
   "optional_date_of_simulation": "10-March-2023",
-  "simulation_uuid": "very_secure_uuid_sample",
-  "num_hours_to_simulate": 8760,
+  "simulation_uuid": "very_secure_uuid_2",
+  "num_hours_to_simulate": 170,
   "solar": {
     "length": 4.5,
     "width": 2,

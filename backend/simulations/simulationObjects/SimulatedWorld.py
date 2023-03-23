@@ -241,6 +241,9 @@ class SimulatedWorld:
 
     def upload_results_to_bigquery(self):
 
+        #close existing file
+        self._output_csv_file.close()
+
         table_id = BIGQUERY_TABLE_ID
         job_config = bigquery.LoadJobConfig(
             source_format=bigquery.SourceFormat.CSV, skip_leading_rows=1, autodetect=True,
