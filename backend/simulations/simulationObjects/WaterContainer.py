@@ -53,6 +53,8 @@ class WaterContainer:
     def process_energy_outflow_for_hour_of_day(self, current_hour_of_day):
         try:
             current_hour_usage_info = self._consumption_pattern[current_hour_of_day]
+            if current_hour_usage_info is None:
+                    raise KeyError()
             self._volume_of_water_sent_out_of_water_container = current_hour_usage_info["water_used"]
             self._average_temp_of_water_sent_out_of_water_container = current_hour_usage_info[
                 "average_temperature_of_water_used"]
@@ -88,6 +90,7 @@ class WaterContainer:
                               - self._energy_sent_out_of_water_container) - target_energy_level
 
             if energy_surplus < 0:  # need to kick in boiler
+                print("Kicked in boiler this hour")
                 self._energy_consumed_by_heater = energy_surplus / self._efficiency_of_traditional_boiler
                 self._current_average_water_temp = self._minimum_average_water_temp
                 self.set_current_thermal_energy()
@@ -123,6 +126,7 @@ class WaterContainer:
         # Apply usage pattern and rules (e.g. minimum temperature of the tank
         self.process_energy_outflow_for_hour_of_day(current_hour_of_day=current_hour_of_day)
 
+        # At the end of the hour, outgoing and current average sync up
         self.outgoing_water_temperature = self._current_average_water_temp
 
 
