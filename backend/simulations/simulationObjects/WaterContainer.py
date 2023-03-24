@@ -1,5 +1,5 @@
 from .CONSTANTS import SPECIFIC_HEAT_CAPACITY_OF_WATER
-
+from .ConfigurationInputs import WaterContainerInput
 
 class WaterContainer:
     _water_capacity: float = None  # capacity in L
@@ -21,18 +21,16 @@ class WaterContainer:
 
     #                                    e.g. {"01:00":{"water_used":10, "average_temperature_of_water_used":50}}
 
-    def __init__(self, config):
+    def __init__(self, config: WaterContainerInput):
         try:
-            self._water_capacity = config["water_capacity"]
-            self._percent_of_thermal_energy_lost_to_waste_per_hour = config[
-                "percent_of_thermal_energy_lost_to_waste_per_hour"]
-            self._percent_of_thermal_energy_absorbed_from_pipes = config[
-                "percent_of_thermal_energy_absorbed_from_pipes"]
-            self._temperature_of_external_water_source = config["temperature_of_external_water_source"]
+            self._water_capacity = config.water_capacity
+            self._percent_of_thermal_energy_lost_to_waste_per_hour = config.percent_of_thermal_energy_lost_to_waste_per_hour
+            self._percent_of_thermal_energy_absorbed_from_pipes = config.percent_of_thermal_energy_absorbed_from_pipes
+            self._temperature_of_external_water_source = config.temperature_of_external_water_source
             self._current_thermal_energy = SPECIFIC_HEAT_CAPACITY_OF_WATER * self._water_capacity * self._current_average_water_temp
-            self._efficiency_of_traditional_boiler = config["efficiency_of_traditional_boiler"]
-            self._minimum_average_water_temp = config["minimum_average_water_temperature"]
-            self._consumption_pattern = config["consumption_pattern"]
+            self._efficiency_of_traditional_boiler = config.efficiency_of_traditional_boiler
+            self._minimum_average_water_temp = config.minimum_average_water_temperature
+            self._consumption_pattern = config.consumption_pattern
         except KeyError as e:
             raise KeyError("Incorrect config passed to WaterContainer", e)
 
@@ -52,14 +50,20 @@ class WaterContainer:
 
     def process_energy_outflow_for_hour_of_day(self, current_hour_of_day):
         try:
-            current_hour_usage_info = self._consumption_pattern[current_hour_of_day]
+            print("Consumption Pattern")
+            print(self._consumption_pattern)
+            print("BLAH BLAH BLASH")
+            # print(f"current hour usage info {self._consumption_pattern.current_hour_of_day}")
+            current_hour_usage_info = vars(self._consumption_pattern)[current_hour_of_day]
+            print(current_hour_usage_info)
+
+
             if current_hour_usage_info is None:
                     raise KeyError()
-            self._volume_of_water_sent_out_of_water_container = current_hour_usage_info["water_used"]
-            self._average_temp_of_water_sent_out_of_water_container = current_hour_usage_info[
-                "average_temperature_of_water_used"]
-        except KeyError as e:
-            KeyError(f"Consumption pattern of WaterContainer not defined for {current_hour_of_day}", e)
+            self._volume_of_water_sent_out_of_water_container = current_hour_usage_info.water_used
+            self._average_temp_of_water_sent_out_of_water_container = current_hour_usage_info.average_temperature_of_water_used
+        except AttributeError as e:
+            AttributeError(f"Consumption pattern of WaterContainer not defined for {current_hour_of_day}", e)
 
         litres_of_hot_water_lost = self.process_hot_water_leaving_water_container(
             self._volume_of_water_sent_out_of_water_container, self._average_temp_of_water_sent_out_of_water_container)

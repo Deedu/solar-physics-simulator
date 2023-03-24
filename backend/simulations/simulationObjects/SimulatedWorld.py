@@ -17,6 +17,7 @@ from .WaterPump import WaterPump
 from .WaterContainer import WaterContainer
 from .CONSTANTS import BIGQUERY_TABLE_ID, OUTPUT_METRICS_FILE_PATH
 import time
+from .ConfigurationInputs import SimulationIncomingRequest
 
 
 class SimulatedWorld:
@@ -32,7 +33,7 @@ class SimulatedWorld:
     _pandas_data: pd.DataFrame = None
     _date_of_simulation_start: datetime = None
     _current_time_in_simulation: str = None
-    _num_hours_to_simulate: int = 24 * 365  # 1 year default 24hrs * 365 days
+    _num_hours_to_simulate: int = 24 * 14  # 1 year default 24hrs * 14 days
     _solar_collector: SolarCollector = None
     _water_container: WaterContainer = None
     _water_pump: WaterPump = None
@@ -46,7 +47,7 @@ class SimulatedWorld:
     _simulation_uuid: uuid = None
     _bigquery_client: bigquery = None
 
-    def __init__(self, configuration):
+    def __init__(self, configuration: SimulationIncomingRequest):
         """
         This initializes the world with params given and does some basic checks
         :param configuration:
@@ -54,44 +55,42 @@ class SimulatedWorld:
         """
         try:
             # Geo Data
-            self._address_of_system = configuration["address"]
+            self._address_of_system = configuration.address
             self.gmaps = googlemaps.Client(key=os.getenv('GOOGLE_MAPS_API_KEY'))
 
             # BigQuery Connection
             self._bigquery_client = bigquery.Client()
 
             # Decide Start Date
-            if configuration.get("optional-date-of-simulation", False):
-                self._date_of_simulation_start = datetime.strptime(configuration["optional_date_of_simulation"],
+            if configuration.optional_date_of_simulation:
+                self._date_of_simulation_start = datetime.strptime(configuration.optional_date_of_simulation,
                                                                    "%d-%B-%Y")
             else:
                 self._date_of_simulation_start = datetime.strptime(datetime.now().strftime("%d-%B-%Y"), "%d-%B-%Y")
 
             # Decide uuid
-            if configuration.get("simulation_uuid", False):
-                self._simulation_uuid = configuration["simulation_uuid"]
+            if configuration.simulation_uuid:
+                self._simulation_uuid = configuration.simulation_uuid
             else:
                 self._simulation_uuid = uuid.uuid4()
 
             # Get num hours to simulate, defaults to 1 year (24*365)
-            if configuration.get("num_hours_to_simulate", False):
-                self._num_hours_to_simulate = configuration["num_hours_to_simulate"]
+            if configuration.num_hours_to_simulate:
+                self._num_hours_to_simulate = configuration.num_hours_to_simulate
 
-            # How long to simulate - important factor on cost/time to process
-            self._num_hours_to_simulate = configuration.get("num_hours_to_simulate", self._num_hours_to_simulate)
 
             # Setup logging metrics locally
             self._output_csv_file = open(OUTPUT_METRICS_FILE_PATH, 'w')
             self._output_csv_file_writer = csv.writer(self._output_csv_file)
 
             # Solar Setup
-            self._solar_collector = SolarCollector(configuration["solar"])
+            self._solar_collector = SolarCollector(configuration.solar)
 
             # Pump Setup
-            self._water_pump = WaterPump(configuration["water_pump"])
+            self._water_pump = WaterPump(configuration.water_pump)
 
             # Water Container Setup
-            self._water_container = WaterContainer(configuration["water_container"])
+            self._water_container = WaterContainer(configuration.water_container)
 
             # Logging Setup
             self._loggable_parts_of_system.append(
@@ -100,7 +99,20 @@ class SimulatedWorld:
             self._loggable_parts_of_system.append(self._water_container)
 
         except KeyError as e:
+            print("Error here")
+            print(e)
             raise KeyError("Incorrect config passed in to SimulatedWorld", e)
+
+    def run_entire_simulation(self):
+        # Prep - fetching external data
+        self.generate_lat_long()
+        self.get_weather_data()
+
+        # Computation
+        self.start_simulation()
+
+        # Output results for analysis
+        self.upload_results_to_bigquery()
 
     def start_simulation(self):
 

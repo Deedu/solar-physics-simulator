@@ -28,17 +28,22 @@ Test Plan:
 
 # noinspection PyUnresolvedReferences
 from simulationObjects.SimulatedWorld import SolarCollector
-
+import json
+from types import SimpleNamespace
 
 class TestSolarCollector:
     def test_constructor_with_valid_config(self):
         config = {"length": 2, "width": 3, "solar_efficiency": 0.05}
+        config = json.dumps(config)
+        config = json.loads(config, object_hook=lambda d: SimpleNamespace(**d))
         collector = SolarCollector(config)
         assert collector._surface_area == 6
         assert collector._solar_efficiency == 0.05
 
     def test_add_one_hour_solar_energy_with_valid_inputs(self):
         config = {"length": 2, "width": 3, "solar_efficiency": 0.05}
+        config = json.dumps(config)
+        config = json.loads(config, object_hook=lambda d: SimpleNamespace(**d))
         collector = SolarCollector(config)
         temp_out = collector.add_one_hour_solar_energy(1000, 5, 20)
         assert temp_out == pytest.approx(20.86, rel=1e-2)
@@ -47,11 +52,15 @@ class TestSolarCollector:
 
     def test_constructor_with_invalid_config(self):
         config = {"length": 2, "solar_efficiency": 0.05}
-        with pytest.raises(KeyError):
+        config = json.dumps(config)
+        config = json.loads(config, object_hook=lambda d: SimpleNamespace(**d))
+        with pytest.raises(AttributeError):
             SolarCollector(config)
 
     def test_add_one_hour_solar_energy_with_DNI_value_over_period_zero(self):
         config = {"length": 2, "width": 3, "solar_efficiency": 0.05}
+        config = json.dumps(config)
+        config = json.loads(config, object_hook=lambda d: SimpleNamespace(**d))
         collector = SolarCollector(config)
         temp_out = collector.add_one_hour_solar_energy(0, 5, 20)
         assert temp_out == pytest.approx(20, rel=1e-2)
@@ -60,6 +69,8 @@ class TestSolarCollector:
 
     def test_different_SPECIFIC_HEAT_CAPACITY_OF_WATER_values(self):
         config = {"length": 2, "width": 3, "solar_efficiency": 0.05}
+        config = json.dumps(config)
+        config = json.loads(config, object_hook=lambda d: SimpleNamespace(**d))
         collector = SolarCollector(config)
         SPECIFIC_HEAT_CAPACITY_OF_WATER = 4186
         temp_out = collector.add_one_hour_solar_energy(1000, 5, 20)
@@ -69,6 +80,8 @@ class TestSolarCollector:
 
     def test_get_loggable_metrics(self):
         config = {"length": 2, "width": 3, "solar_efficiency": 0.05}
+        config = json.dumps(config)
+        config = json.loads(config, object_hook=lambda d: SimpleNamespace(**d))
         collector = SolarCollector(config)
         collector.add_one_hour_solar_energy(1000, 5, 20)
         metrics = collector.get_loggable_metrics()

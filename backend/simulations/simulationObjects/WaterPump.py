@@ -1,3 +1,6 @@
+from .ConfigurationInputs import WaterPumpInput
+
+
 class WaterPump:
     _min_flow_rate: float = 0
     _max_flow_rate: float = None
@@ -8,15 +11,13 @@ class WaterPump:
     _flow_rate_increase_factor: float = 1.20  # how much to increase flow rate over 1 hour, e.g. 15% faster is 1.15
     _flow_rate_decrease_factor: float = 0.7  # how much to decrease flow rate over 1 hour, e.g. 30% slower is 0.7
 
-    def __init__(self, config):
+    def __init__(self, config: WaterPumpInput):
         try:
             self._min_flow_rate = 0.5  # 0.5 L/min hardcoded because I have no idea if this is a real thing
-            self._max_flow_rate = config["max_flow_rate"]
+            self._max_flow_rate = config.max_flow_rate
             self._current_flow_rate = self._min_flow_rate
-            self._maximum_temp_difference_between_water_incoming_and_outgoing_solar = config[
-                "maximum_temp_difference_between_water_incoming_and_outgoing_solar"]
-            self._minimum_temp_difference_between_water_incoming_and_outgoing_solar = config[
-                "minimum_temp_difference_between_water_incoming_and_outgoing_solar"]
+            self._maximum_temp_difference_between_water_incoming_and_outgoing_solar = config.maximum_temp_difference_between_water_incoming_and_outgoing_solar
+            self._minimum_temp_difference_between_water_incoming_and_outgoing_solar = config.minimum_temp_difference_between_water_incoming_and_outgoing_solar
         except KeyError as e:
             raise KeyError("Incorrect config passed to WaterPump", e)
 
@@ -35,12 +36,12 @@ class WaterPump:
         temp_diff_too_high = temp_difference_between_incoming_and_outgoing > self._maximum_temp_difference_between_water_incoming_and_outgoing_solar
         temp_diff_too_low = temp_difference_between_incoming_and_outgoing < self._minimum_temp_difference_between_water_incoming_and_outgoing_solar
 
-        if temp_diff_too_low: # slow down pump
+        if temp_diff_too_low:  # slow down pump
             self._current_flow_rate = max(self._current_flow_rate * self._flow_rate_decrease_factor,
                                           self._min_flow_rate)
         elif not temp_diff_too_low and not temp_diff_too_high:
             pass  # leave pump in same state
-        elif temp_diff_too_high: # speed up pump
+        elif temp_diff_too_high:  # speed up pump
             self._current_flow_rate = min(self._current_flow_rate * self._flow_rate_increase_factor,
                                           self._max_flow_rate)
         self._percent_of_maximum_flow_rate = self._current_flow_rate / self._max_flow_rate

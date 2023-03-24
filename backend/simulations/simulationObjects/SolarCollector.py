@@ -1,5 +1,5 @@
 from .CONSTANTS import SPECIFIC_HEAT_CAPACITY_OF_WATER
-
+from .ConfigurationInputs import SolarInput
 
 class SolarCollector:
     _surface_area: float = None  # m^2
@@ -9,10 +9,10 @@ class SolarCollector:
     _energy_captured_by_solar: float = 0  # Watts
     _solar_efficiency: float = None  # give as a decimal, e.g. 0.05 for 5%
 
-    def __init__(self, config):
+    def __init__(self, config: SolarInput):
         try:
-            self._surface_area = config["length"] * config["width"]
-            self._solar_efficiency = config["solar_efficiency"]
+            self._surface_area = config.length * config.width
+            self._solar_efficiency = config.solar_efficiency
         except KeyError as e:
             raise KeyError("Incorrect config passed to SolarCollector", e)
 

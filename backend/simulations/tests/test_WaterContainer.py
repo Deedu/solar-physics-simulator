@@ -37,7 +37,8 @@ from simulationObjects.WaterContainer import WaterContainer
 from simulationObjects.CONSTANTS import SPECIFIC_HEAT_CAPACITY_OF_WATER
 
 import copy
-
+import json
+from types import SimpleNamespace
 COMPLETE_CONFIG = {"water_capacity": 200,
                    "percent_of_thermal_energy_absorbed_from_pipes": 0.85,
                    "percent_of_thermal_energy_lost_to_waste_per_hour": 0.02,
@@ -145,6 +146,8 @@ class TestWaterContainer:
     def test_set_and_get_current_thermal_energy(self):
         config = copy.deepcopy(COMPLETE_CONFIG)
         config["water_capacity"] = 50
+        config = json.dumps(config)
+        config = json.loads(config, object_hook=lambda d: SimpleNamespace(**d))
         container = WaterContainer(config)
         container.set_current_thermal_energy()
         assert container._current_thermal_energy == 50 * 50 * SPECIFIC_HEAT_CAPACITY_OF_WATER
@@ -156,6 +159,8 @@ class TestWaterContainer:
         config["water_capacity"] = 50
         config["consumption_pattern"] = {
             "01:00": {'water_used': 10, "average_temperature_of_water_used": 60}}
+        config = json.dumps(config)
+        config = json.loads(config, object_hook=lambda d: SimpleNamespace(**d))
         container = WaterContainer(config)
         container.process_energy_outflow_for_hour_of_day("01:00")
         assert container._volume_of_water_sent_out_of_water_container == 10
@@ -165,6 +170,8 @@ class TestWaterContainer:
     def test_water_coming_back_colder(self):
         config = copy.deepcopy(COMPLETE_CONFIG)
         config["water_capacity"] = 50
+        config = json.dumps(config)
+        config = json.loads(config, object_hook=lambda d: SimpleNamespace(**d))
         container = WaterContainer(config)
         with pytest.raises(EnvironmentError):
             container.run_hour_of_usage(40, 5, "01:00")
@@ -172,6 +179,8 @@ class TestWaterContainer:
     def test_hashing_and_equality_methods(self):
         config = copy.deepcopy(COMPLETE_CONFIG)
         config["water_capacity"] = 50
+        config = json.dumps(config)
+        config = json.loads(config, object_hook=lambda d: SimpleNamespace(**d))
         container1 = WaterContainer(config)
         container2 = WaterContainer(config)
         assert hash(container1) == hash(container2)
@@ -182,6 +191,8 @@ class TestWaterContainer:
         config["water_capacity"] = 50
         config["consumption_pattern"] = {
             "01:00": {"water_used": 10, "average_temperature_of_water_used": 60}}
+        config = json.dumps(config)
+        config = json.loads(config, object_hook=lambda d: SimpleNamespace(**d))
         container = WaterContainer(config)
         container.run_hour_of_usage(52, 8, "01:00")
         assert container.outgoing_water_temperature == pytest.approx(65, rel=1e-2)

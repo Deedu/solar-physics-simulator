@@ -12,3 +12,8 @@ pytest-cov==4.0.0
 uuid==1.30
 pandas==1.5.3
 google-cloud-bigquery==3.7.0
+gunicorn==20.1.0
+fastapi==0.95.0
+uvicorn==0.21.1
+httpx==0.23.3
+pytest-dotenv==0.5.2

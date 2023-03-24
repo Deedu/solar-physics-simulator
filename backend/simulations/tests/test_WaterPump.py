@@ -33,10 +33,14 @@ Test Plan:
 
 # noinspection PyUnresolvedReferences
 from simulationObjects.WaterPump import WaterPump
+import json
+from types import SimpleNamespace
 class TestWaterPump:
     def test_constructor_with_valid_config(self):
         config = {"max_flow_rate": 10, "minimum_temp_difference_between_water_incoming_and_outgoing_solar": 2,
                   "maximum_temp_difference_between_water_incoming_and_outgoing_solar": 15}
+        config = json.dumps(config)
+        config = json.loads(config, object_hook=lambda d: SimpleNamespace(**d))
         wp = WaterPump(config)
         assert wp._max_flow_rate == 10
         assert wp._minimum_temp_difference_between_water_incoming_and_outgoing_solar == 2
@@ -45,17 +49,23 @@ class TestWaterPump:
     def test_get_flow_rate(self):
         config = {"max_flow_rate": 10, "minimum_temp_difference_between_water_incoming_and_outgoing_solar": 2,
                   "maximum_temp_difference_between_water_incoming_and_outgoing_solar": 15}
+        config = json.dumps(config)
+        config = json.loads(config, object_hook=lambda d: SimpleNamespace(**d))
         wp = WaterPump(config)
         assert wp.get_flow_rate() == wp._current_flow_rate
 
     def test_constructor_with_invalid_config(self):
-        with pytest.raises(KeyError):
+        with pytest.raises(AttributeError):
             config = {"max_flow_rate": 10, "minimum_temp_difference_between_water_incoming_and_outgoing_solar": 2}
+            config = json.dumps(config)
+            config = json.loads(config, object_hook=lambda d: SimpleNamespace(**d))
             WaterPump(config)
 
     def test_adjust_flow_to_current_state_with_min_temp_difference(self):
         config = {"max_flow_rate": 10, "minimum_temp_difference_between_water_incoming_and_outgoing_solar": 2,
                   "maximum_temp_difference_between_water_incoming_and_outgoing_solar": 15}
+        config = json.dumps(config)
+        config = json.loads(config, object_hook=lambda d: SimpleNamespace(**d))
         wp = WaterPump(config)
         wp.adjust_flow_to_current_state(20, 22)
         assert wp.get_flow_rate() == wp._min_flow_rate
@@ -63,6 +73,8 @@ class TestWaterPump:
     def test_adjust_flow_to_current_state_general_behavior(self):
         config = {"max_flow_rate": 10, "minimum_temp_difference_between_water_incoming_and_outgoing_solar": 2,
                   "maximum_temp_difference_between_water_incoming_and_outgoing_solar": 5}
+        config = json.dumps(config)
+        config = json.loads(config, object_hook=lambda d: SimpleNamespace(**d))
         wp = WaterPump(config)
         wp.adjust_flow_to_current_state(20, 22)
         assert wp.get_flow_rate() == wp._min_flow_rate
@@ -102,6 +114,8 @@ class TestWaterPump:
     def test_adjust_flow_to_current_state_with_low_temp_difference(self):
         config = {"max_flow_rate": 10, "minimum_temp_difference_between_water_incoming_and_outgoing_solar": 2,
                   "maximum_temp_difference_between_water_incoming_and_outgoing_solar": 15}
+        config = json.dumps(config)
+        config = json.loads(config, object_hook=lambda d: SimpleNamespace(**d))
         wp = WaterPump(config)
         initial_fr = wp.get_flow_rate()
         incoming_temp = outgoing_temp = 25
