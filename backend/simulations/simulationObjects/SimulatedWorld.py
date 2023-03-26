@@ -265,6 +265,11 @@ class SimulatedWorld:
         self._output_csv_file_writer.writerow(row_of_data)
 
     def delete_existing_bigquery_results_with_same_uuid(self):
+        """
+        This function deletes bigquery rows with same uuid - used to make demo live and update to new values instead of
+        averaging past values
+        :return:
+        """
         table_id = BIGQUERY_TABLE_ID
 
         table_original = self._bigquery_client.get_table(table_id)  # Make an API request.
@@ -273,7 +278,7 @@ class SimulatedWorld:
         sql_statement = f"""
                     DELETE {table_id} t WHERE t.uuid IN
                     (SELECT uuid FROM {table_id}
-                    WHERE uuid = {self._simulation_uuid});
+                    WHERE uuid = '{self._simulation_uuid}');
                     """
         query_job = self._bigquery_client.query(query=sql_statement)
         print("Bigquery cleanup started")
@@ -281,12 +286,12 @@ class SimulatedWorld:
         table_new = self._bigquery_client.get_table(table_id)  # Make an API request.
 
         print(
-            f"Deleted {table_original.num_rows - table_new.num_rows} to clean bq table {table_id} for new simulation {self._simulation_uuid}")
+            f"Deleted {table_original.num_rows - table_new.num_rows} rows to clean bq table {table_id} for new simulation {self._simulation_uuid}")
 
     def upload_results_to_bigquery(self):
 
         table_id = BIGQUERY_TABLE_ID
-        # self.delete_existing_bigquery_results_with_same_uuid()
+        self.delete_existing_bigquery_results_with_same_uuid()
 
         # close existing temp file
         self._output_csv_file.close()
