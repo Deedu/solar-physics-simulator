@@ -21,7 +21,7 @@ The idea for the system is fairly straightforward. Model a system that:
 * Optimizing hardware/system design
   * How big should solar panels be relative to water tank, how powerful should the pump be, etc.
 
-# Architecture
+# Production Architecture
 
 ![Diagram showing the various services that produce the simulation](./architecture-graphs/solar_physics_simulator.png "Architecture Diagram")
 
