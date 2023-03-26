@@ -1,0 +1,85 @@
+name: Simulation Processing Python Backend Prod - Deploy python backend to Google Cloud Run on push to prod
+'on':
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+defaults:
+  run:
+    working-directory: backend/simulations
+
+env:
+  GITHUB_SHA: ${{ github.sha }}
+  GITHUB_REF: ${{ github.ref }}
+  IMAGE_FINAL: simulation-processing-backend
+  IMAGE_IN_PROCESS: in-process-image
+  REGISTRY_HOSTNAME: us-docker.pkg.dev/solar-phyics-simulator/simulation-processing-artifact-repo
+  GRPC_POLL_STRATEGY: poll
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, and Publish
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+      # Now in deployment
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_SIMULATIONS }}'
+
+
+      # Configure docker to use the gcloud command-line tool as a credential helper
+    - name: Docker setup
+      run: |
+        # Set up docker to authenticate
+        # via gcloud command-line tool.
+        gcloud auth configure-docker us-docker.pkg.dev
+
+    # Build the Docker image
+    # DO NOT DELETE THE . on final line!
+    # This is part of docker command to refer to local working directory
+    - name: Build With Docker
+      run: |
+        export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'`
+        echo Tag: $TAG
+        echo RegistryHostname: $REGISTRY_HOSTNAME
+        echo Image: $IMAGE_IN_PROCESS
+        echo GithubRef: $GITHUB_REF
+        docker build -t $IMAGE_IN_PROCESS -f run.Dockerfile \
+          --build-arg GITHUB_SHA="$GITHUB_SHA" \
+          --build-arg GITHUB_REF="$GITHUB_REF" .
+
+    # Installing Buildpack into Github Actions Environment
+    - id: setup-pack
+      name: Installing Buildpack
+      uses: buildpacks/github-actions/setup-pack@v4.4.0
+
+    # Still building in Github Actions
+    - id: build-final-package
+      name: Building with Cloud Optimized Buildpack
+      run: |
+        #!/usr/bin/env bash
+        pack build $IMAGE_FINAL --builder gcr.io/buildpacks/builder:v1 --run-image $IMAGE_IN_PROCESS
+
+    # Push the Docker image to Google Artifact Registry
+    - name: Publish To Artifact Registry
+      run: |
+        export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'`
+        echo $TAG
+        docker tag $IMAGE_FINAL $REGISTRY_HOSTNAME/$IMAGE_FINAL
+        docker push $REGISTRY_HOSTNAME/$IMAGE_FINAL
+
+    # This is where we actually deploy to Cloud Run
+    - id: 'deploy'
+      name: Deploy To Cloud Run Service simulation-computation-service
+      uses: 'google-github-actions/deploy-cloudrun@v0'
+      with:
+        service: simulation-computation-service
+        image: us-docker.pkg.dev/videocard-1/video-processing-artifact-repo/simulation-processing-backend:latest

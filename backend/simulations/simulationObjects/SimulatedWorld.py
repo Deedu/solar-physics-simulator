@@ -293,6 +293,7 @@ class SimulatedWorld:
         table_id = BIGQUERY_TABLE_ID
         self.delete_existing_bigquery_results_with_same_uuid()
 
+        table_original = self._bigquery_client.get_table(table_id)
         # close existing temp file
         self._output_csv_file.close()
 
@@ -305,9 +306,9 @@ class SimulatedWorld:
 
         job.result()
 
-        table = self._bigquery_client.get_table(table_id)  # Make an API request.
+        table_new = self._bigquery_client.get_table(table_id)  # Make an API request.
         print(
-            "Total of {} rows and {} columns in {}".format(
-                table.num_rows, len(table.schema), table_id
+            "Added {} rows for a total of {} rows and {} columns in {}".format(
+                table_new.num_rows - table_original.num_rows, table_new.num_rows, len(table_new.schema), table_id
             )
         )
