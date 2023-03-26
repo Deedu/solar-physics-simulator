@@ -68,6 +68,20 @@ jobs:
         #!/usr/bin/env bash
         pack build $IMAGE_FINAL --builder gcr.io/buildpacks/builder:v1 --run-image $IMAGE_IN_PROCESS
 
+    # Testing Stage
+    # runs within your Docker container
+      container:
+      image: $IMAGE_FINAL
+    # checkout your code from your repository
+    # and runs pytest in your pipenv environment
+
+    - id:
+      name: Test with pytest
+      uses: actions/checkout@v2
+      run: |
+        pipenv run pytest tests/
+        
+
     # Push the Docker image to Google Artifact Registry
     - name: Publish To Artifact Registry
       run: |
