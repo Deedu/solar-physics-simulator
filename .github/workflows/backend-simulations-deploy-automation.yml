@@ -84,7 +84,18 @@ jobs:
       with:
         service: simulation-computation-service
         image: us-docker.pkg.dev/solar-phyics-simulator/simulation-processing-artifact-repo/simulation-processing-backend:latest
-#  testing:
-#    name: Testing Phase
-#    runs-on: ubuntu-latest
 
+  testing:
+    name: Testing Phase
+    runs-on: ubuntu-latest
+    needs: [setup-build-publish-deploy]
+    # runs within your Docker container
+    container:
+      image: us-docker.pkg.dev/solar-phyics-simulator/simulation-processing-artifact-repo/simulation-processing-backend:latest
+
+    steps:
+        # runs on the latest Ubuntu
+      - uses: actions/checkout@v2
+      - name: Test with pytest
+        run: |
+          python3 -m pytest --cov -rP tests/
