@@ -69,36 +69,21 @@ jobs:
         pack build $IMAGE_FINAL --builder gcr.io/buildpacks/builder:v1 --run-image $IMAGE_IN_PROCESS
         
 
-    
+    # Push the Docker image to Google Artifact Registry
+    - name: Publish To Artifact Registry
+      run: |
+        export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'`
+        echo $TAG
+        docker tag $IMAGE_FINAL $REGISTRY_HOSTNAME/$IMAGE_FINAL
+        docker push $REGISTRY_HOSTNAME/$IMAGE_FINAL
 
-  Deployment:
-    name: Deploying to Artifact Repostory then Cloud Run
-    runs-on: ubuntu-latest
-    steps:
-     - name: Checkout
-       uses: actions/checkout@v2
-
-      # Now in deployment
-     - id: 'auth'
-       uses: 'google-github-actions/auth@v0'
-       with:
-         credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_SIMULATIONS }}'
-
-      # Push the Docker image to Google Artifact Registry
-     - name: Publish To Artifact Registry
-       run: |
-         export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'`
-         echo $TAG
-         docker tag $IMAGE_FINAL $REGISTRY_HOSTNAME/$IMAGE_FINAL
-         docker push $REGISTRY_HOSTNAME/$IMAGE_FINAL
-
-# This is where we actually deploy to Cloud Run
-     - id: 'deploy'
-       name: Deploy To Cloud Run Service simulation-computation-service
-       uses: 'google-github-actions/deploy-cloudrun@v0'
-       with:
-         service: simulation-computation-service
-         image: us-docker.pkg.dev/solar-phyics-simulator/simulation-processing-artifact-repo/simulation-processing-backend:latest
+    # This is where we actually deploy to Cloud Run
+    - id: 'deploy'
+      name: Deploy To Cloud Run Service simulation-computation-service
+      uses: 'google-github-actions/deploy-cloudrun@v0'
+      with:
+        service: simulation-computation-service
+        image: us-docker.pkg.dev/solar-phyics-simulator/simulation-processing-artifact-repo/simulation-processing-backend:latest
 #  testing:
 #    name: Testing Phase
 #    runs-on: ubuntu-latest
