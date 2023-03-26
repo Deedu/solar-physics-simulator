@@ -15,7 +15,7 @@ from google.cloud import bigquery
 from .SolarCollector import SolarCollector
 from .WaterPump import WaterPump
 from .WaterContainer import WaterContainer
-from .CONSTANTS import BIGQUERY_TABLE_ID, OUTPUT_METRICS_FILE_PATH
+from .CONSTANTS import BIGQUERY_TABLE_ID, OUTPUT_METRICS_FILE_PATH, BIGQUERY_SCHEMA
 import time
 from .ConfigurationInputs import SimulationIncomingRequest
 
@@ -29,7 +29,7 @@ class SimulatedWorld:
     _latitude: float = None
     _longitude: float = None
     _address_of_system: str = None
-    _meteo_weather_data: dict = {"DNI_data": None, "timestamps": None}
+    _meteo_weather_data: dict = None
     _pandas_data: pd.DataFrame = None
     _date_of_simulation_start: datetime = None
     _current_time_in_simulation: str = None
@@ -37,12 +37,12 @@ class SimulatedWorld:
     _solar_collector: SolarCollector = None
     _water_container: WaterContainer = None
     _water_pump: WaterPump = None
-    _loggable_parts_of_system: list = []  # list of all the objects, will be solar, water pump and water container once created
+    _loggable_parts_of_system: list = None  # list of all the objects, will be solar, water pump and water container once created
     _output_csv_file: _io.FileIO = None
     _output_csv_file_writer: csv.writer = None
     _written_output_header: bool = False
-    _header_for_output_file: dict = {"uuid": 0, "Timestamp": 1, "DNI_Value": 2}
-    _header_as_list_for_output_file: list = ["uuid", "Timestamp", "DNI_Value"]
+    _header_for_output_file: dict = None
+    _header_as_list_for_output_file: list = None
     _num_metrics_logged: int = None
     _simulation_uuid: uuid = None
     _bigquery_client: bigquery = None
@@ -57,6 +57,7 @@ class SimulatedWorld:
             # Geo Data
             self._address_of_system = configuration.address
             self.gmaps = googlemaps.Client(key=os.getenv('GOOGLE_MAPS_API_KEY'))
+            self._meteo_weather_data = {"DNI_data": None, "timestamps": None}
 
             # BigQuery Connection
             self._bigquery_client = bigquery.Client()
@@ -78,7 +79,6 @@ class SimulatedWorld:
             if configuration.num_hours_to_simulate:
                 self._num_hours_to_simulate = configuration.num_hours_to_simulate
 
-
             # Setup logging metrics locally
             self._output_csv_file = open(OUTPUT_METRICS_FILE_PATH, 'w')
             self._output_csv_file_writer = csv.writer(self._output_csv_file)
@@ -93,10 +93,15 @@ class SimulatedWorld:
             self._water_container = WaterContainer(configuration.water_container)
 
             # Logging Setup
+            self._loggable_parts_of_system = []
             self._loggable_parts_of_system.append(
                 self._solar_collector)
             self._loggable_parts_of_system.append(self._water_pump)
             self._loggable_parts_of_system.append(self._water_container)
+
+            # Logging Output setup
+            self._header_for_output_file = {"uuid": 0, "Timestamp": 1, "DNI_Value": 2}
+            self._header_as_list_for_output_file = ["uuid", "Timestamp", "DNI_Value"]
 
         except KeyError as e:
             print("Error here")
@@ -118,7 +123,7 @@ class SimulatedWorld:
 
         start_time = time.time()
 
-        self.write_output_file_header()
+        self.calculate_output_file_header()
 
         for i in range(self._num_hours_to_simulate):
             current_time = time.time()
@@ -136,7 +141,7 @@ class SimulatedWorld:
 
     def run_one_hourly_iteration_of_simulation(self):
         # Filter Historical Dataset to get an average to use today
-        print(self._current_time_in_simulation)
+        # print(self._current_time_in_simulation)
         current_hour_of_day = self._current_time_in_simulation[-5:]  # e.g. 01:00
         month_day_hour_formatted = self._current_time_in_simulation[5:]  # e.g. 03-10T22:00
         same_day_time_all_years_in_dataset_mask = self._pandas_data.index.str.contains(month_day_hour_formatted)
@@ -163,13 +168,13 @@ class SimulatedWorld:
                                                 current_hour_of_day=current_hour_of_day)
 
         # Adjust water flow from temperature difference between what is in pipes and what is in solar panel.
-        print(
-            f"Starting flow rate: {flow_rate_for_the_hour}, starting temp into solar {starting_temperature_into_solar}, ending temp in pipes {temperature_of_water_in_pipes}, ending temp water container {self._water_container.outgoing_water_temperature}")
-        self._water_pump.adjust_flow_to_current_state(self._water_container.outgoing_water_temperature,
-                                                      temperature_of_water_in_pipes)
+        # print(
+        #     f"Starting flow rate: {flow_rate_for_the_hour}, starting temp into solar {starting_temperature_into_solar}, ending temp in pipes {temperature_of_water_in_pipes}, ending temp water container {self._water_container.outgoing_water_temperature}")
+        # self._water_pump.adjust_flow_to_current_state(self._water_container.outgoing_water_temperature,
+        #                                               temperature_of_water_in_pipes)
 
         # print(same_day_time_all_years_in_dataset)
-        print(f"Mean DNI for {month_day_hour_formatted} is: {dni_value_for_hour_in_simulation}")
+        # print(f"Mean DNI for {month_day_hour_formatted} is: {dni_value_for_hour_in_simulation}")
 
     def get_weather_data(self):
         """
@@ -177,7 +182,7 @@ class SimulatedWorld:
         Docs here: https://open-meteo.com/en/docs/historical-weather-api
         :return:
         """
-
+        print("Fetching weather data")
         if self._date_of_simulation_start is None:
             self._date_of_simulation_start = datetime.now()
         today_date_formatted = (self._date_of_simulation_start - relativedelta(days=7)).strftime(
@@ -199,6 +204,8 @@ class SimulatedWorld:
         self._pandas_data = pd.DataFrame(
             holding_dict)
 
+        print("Fetched Weather Data")
+
         # raise NotImplementedError # Decide what to do with data, how to process
 
     def generate_lat_long(self):
@@ -208,10 +215,11 @@ class SimulatedWorld:
             # print(f"geo data - {geo_data}")
             self._latitude = geo_data["lat"]
             self._longitude = geo_data["lng"]
+            print("Fetched Coordinates from address input")
         except:
             raise LookupError
 
-    def write_output_file_header(self):
+    def calculate_output_file_header(self):
         """
         Dynamically generate header based on logging metrics set at object level
         :return:
@@ -233,8 +241,10 @@ class SimulatedWorld:
                     self._num_metrics_logged += 1
 
                     # Header
-            self._output_csv_file_writer.writerow(self._header_as_list_for_output_file)
+            # self._output_csv_file_writer.writerow(self._header_as_list_for_output_file)
             self._written_output_header = True
+            if (len(self._header_as_list_for_output_file) > 16):
+                pass
 
     def write_out_simulation_results(self):
 
@@ -249,16 +259,40 @@ class SimulatedWorld:
                 value = loggableJSONResponse[key]
                 row_of_data[self._header_for_output_file[loggableObject][key]] = value
 
+        print(f"Simulation Results Intermediate - {self._header_for_output_file}")
+        print(row_of_data)
+
         self._output_csv_file_writer.writerow(row_of_data)
+
+    def delete_existing_bigquery_results_with_same_uuid(self):
+        table_id = BIGQUERY_TABLE_ID
+
+        table_original = self._bigquery_client.get_table(table_id)  # Make an API request.
+
+        # TODO - Modify to sanitize input, protect from sql injection
+        sql_statement = f"""
+                    DELETE {table_id} t WHERE t.uuid IN
+                    (SELECT uuid FROM {table_id}
+                    WHERE uuid = {self._simulation_uuid});
+                    """
+        query_job = self._bigquery_client.query(query=sql_statement)
+        print("Bigquery cleanup started")
+        results = query_job.result()  # Waits for job to complete.
+        table_new = self._bigquery_client.get_table(table_id)  # Make an API request.
+
+        print(
+            f"Deleted {table_original.num_rows - table_new.num_rows} to clean bq table {table_id} for new simulation {self._simulation_uuid}")
 
     def upload_results_to_bigquery(self):
 
-        #close existing file
+        table_id = BIGQUERY_TABLE_ID
+        # self.delete_existing_bigquery_results_with_same_uuid()
+
+        # close existing temp file
         self._output_csv_file.close()
 
-        table_id = BIGQUERY_TABLE_ID
         job_config = bigquery.LoadJobConfig(
-            source_format=bigquery.SourceFormat.CSV, skip_leading_rows=1, autodetect=True,
+            schema=BIGQUERY_SCHEMA
         )
 
         with open(OUTPUT_METRICS_FILE_PATH, "rb") as source_file:
@@ -268,7 +302,7 @@ class SimulatedWorld:
 
         table = self._bigquery_client.get_table(table_id)  # Make an API request.
         print(
-            "Loaded {} rows and {} columns to {}".format(
+            "Total of {} rows and {} columns in {}".format(
                 table.num_rows, len(table.schema), table_id
             )
         )

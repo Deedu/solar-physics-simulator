@@ -1,5 +1,6 @@
 from .CONSTANTS import SPECIFIC_HEAT_CAPACITY_OF_WATER
 from .ConfigurationInputs import WaterContainerInput
+from types import SimpleNamespace
 
 class WaterContainer:
     _water_capacity: float = None  # capacity in L
@@ -50,11 +51,15 @@ class WaterContainer:
 
     def process_energy_outflow_for_hour_of_day(self, current_hour_of_day):
         try:
-            print("Consumption Pattern")
-            print(self._consumption_pattern)
-            print("BLAH BLAH BLASH")
             # print(f"current hour usage info {self._consumption_pattern.current_hour_of_day}")
-            current_hour_usage_info = vars(self._consumption_pattern)[current_hour_of_day]
+
+            # typecheck below to get around differences between test and real request
+            current_hour_usage_info = None
+            if isinstance(self._consumption_pattern, SimpleNamespace):
+                current_hour_usage_info = vars(self._consumption_pattern)[current_hour_of_day]
+            else:
+                current_hour_usage_info = self._consumption_pattern.current_hour_of_day
+
             print(current_hour_usage_info)
 
 
