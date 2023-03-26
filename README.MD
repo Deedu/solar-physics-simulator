@@ -1,3 +1,5 @@
+### Build Status
+[![Simulation Processing Python Backend](https://github.com/Deedu/solar-physics-simulator/actions/workflows/backend-simulations-deploy-automation.yml/badge.svg)](https://github.com/Deedu/solar-physics-simulator/actions/workflows/backend-simulations-deploy-automation.yml)
 # The Basic Mental Model
 
 The idea for the system is fairly straightforward. Model a system that:
