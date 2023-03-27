@@ -58,7 +58,7 @@ class WaterContainer:
             if isinstance(self._consumption_pattern, SimpleNamespace):
                 current_hour_usage_info = vars(self._consumption_pattern)[current_hour_of_day]
             else:
-                current_hour_usage_info = self._consumption_pattern.current_hour_of_day
+                current_hour_usage_info = self._consumption_pattern[current_hour_of_day]
 
             print(current_hour_usage_info)
 
@@ -69,7 +69,7 @@ class WaterContainer:
             self._average_temp_of_water_sent_out_of_water_container = current_hour_usage_info.average_temperature_of_water_used
         except AttributeError as e:
             AttributeError(f"Consumption pattern of WaterContainer not defined for {current_hour_of_day}", e)
-
+        print(current_hour_of_day)
         litres_of_hot_water_lost = self.process_hot_water_leaving_water_container(
             self._volume_of_water_sent_out_of_water_container, self._average_temp_of_water_sent_out_of_water_container)
 

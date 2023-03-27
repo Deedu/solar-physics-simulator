@@ -125,6 +125,10 @@ async def create_simulation(incoming_simulation_parameters: Annotated[Simulation
                                    "water_used": 10,
                                    "average_temperature_of_water_used": 50
                                },
+                               "17:00": {
+                                   "water_used": 10,
+                                   "average_temperature_of_water_used": 50
+                               },
                                "18:00": {
                                    "water_used": 10,
                                    "average_temperature_of_water_used": 50
@@ -246,6 +250,10 @@ async def create_simulation(incoming_simulation_parameters: Annotated[Simulation
                                         "water_used": 10,
                                         "average_temperature_of_water_used": 50
                                     },
+                                    "17:00": {
+                                        "water_used": 10,
+                                        "average_temperature_of_water_used": 50
+                                    },
                                     "18:00": {
                                         "water_used": 10,
                                         "average_temperature_of_water_used": 50
@@ -364,6 +372,10 @@ async def create_simulation(incoming_simulation_parameters: Annotated[Simulation
                                           "average_temperature_of_water_used": 50
                                       },
                                       "16:00": {
+                                          "water_used": 10,
+                                          "average_temperature_of_water_used": 50
+                                      },
+                                      "17:00": {
                                           "water_used": 10,
                                           "average_temperature_of_water_used": 50
                                       },
@@ -489,6 +501,10 @@ async def create_simulation(incoming_simulation_parameters: Annotated[Simulation
                             "water_used": 10,
                             "average_temperature_of_water_used": 50
                         },
+                        "17:00": {
+                            "water_used": 10,
+                            "average_temperature_of_water_used": 50
+                        },
                         "18:00": {
                             "water_used": 85,
                             "average_temperature_of_water_used": 50
@@ -521,7 +537,7 @@ async def create_simulation(incoming_simulation_parameters: Annotated[Simulation
                                     "description": "**super sunny example** - 7 days of modelling the system with a lot of sun",
                                     "value": {
                                         "address": "One City Plaza, Yuma, AZ 85364",
-                                        "optional_date_of_simulation": "10-March-2023",
+                                        "optional_date_of_simulation": "10-July-2023",
                                         "simulation_uuid": "super_sunny_city_example",
                                         "num_hours_to_simulate": 170,
                                         "solar": {
@@ -607,6 +623,10 @@ async def create_simulation(incoming_simulation_parameters: Annotated[Simulation
                                                     "average_temperature_of_water_used": 50
                                                 },
                                                 "16:00": {
+                                                    "water_used": 10,
+                                                    "average_temperature_of_water_used": 50
+                                                },
+                                                "17:00": {
                                                     "water_used": 10,
                                                     "average_temperature_of_water_used": 50
                                                 },
@@ -731,6 +751,10 @@ async def create_simulation(incoming_simulation_parameters: Annotated[Simulation
                                             "water_used": 10,
                                             "average_temperature_of_water_used": 50
                                         },
+                                        "17:00": {
+                                            "water_used": 10,
+                                            "average_temperature_of_water_used": 50
+                                        },
                                         "18:00": {
                                             "water_used": 10,
                                             "average_temperature_of_water_used": 50
@@ -852,6 +876,10 @@ async def create_simulation(incoming_simulation_parameters: Annotated[Simulation
                                            "water_used": 10,
                                            "average_temperature_of_water_used": 50
                                        },
+                                       "17:00": {
+                                           "water_used": 10,
+                                           "average_temperature_of_water_used": 50
+                                       },
                                        "18:00": {
                                            "water_used": 10,
                                            "average_temperature_of_water_used": 50
@@ -970,6 +998,10 @@ async def create_simulation(incoming_simulation_parameters: Annotated[Simulation
                                           "average_temperature_of_water_used": 50
                                       },
                                       "16:00": {
+                                          "water_used": 10,
+                                          "average_temperature_of_water_used": 50
+                                      },
+                                      "17:00": {
                                           "water_used": 10,
                                           "average_temperature_of_water_used": 50
                                       },

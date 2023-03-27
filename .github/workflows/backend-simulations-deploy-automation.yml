@@ -94,6 +94,13 @@ jobs:
       image: us-docker.pkg.dev/solar-phyics-simulator/simulation-processing-artifact-repo/simulation-processing-backend:latest
 
     steps:
+
+      # Now in deployment
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_SIMULATIONS }}'
+
         # runs on the latest Ubuntu
       - uses: actions/checkout@v2
       - name: Test with pytest
