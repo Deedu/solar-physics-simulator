@@ -1192,7 +1192,7 @@ def custom_openapi():
                     "the backend. Please click the 'try it out' button for "
                     "the /createSimulation route and your simulation will be made."
                     " You can customize the parameters to your liking. A one week simulation takes ~0.5 min, a 1 month simulation takes ~0.85 min and a "
-                    "1 year simulation takes ~5-8 mins",
+                    "1 year simulation takes ~5-8 mins [Home Page](https://solar-simulation.greatestdemoever.com/) -- [Analytics Dashboard](https://lookerstudio.google.com/reporting/8fd3071e-f9d3-47ce-8211-169a2945ec67)",
         routes=app.routes,
     )
     openapi_schema["info"]["x-logo"] = {
