@@ -167,7 +167,7 @@ class SimulatedWorld:
                                                 current_hour_of_day=current_hour_of_day)
 
         # Adjust water pump to have new updated speed
-        self._water_pump.adjust_flow_to_current_state()
+        self._water_pump.adjust_flow_to_current_state(starting_temperature_into_solar, temperature_of_water_in_pipes)
 
     def get_weather_data(self):
         """
@@ -179,13 +179,15 @@ class SimulatedWorld:
         if self._date_of_simulation_start is None:
             self._date_of_simulation_start = datetime.now()
         today_date_formatted = (self._date_of_simulation_start - relativedelta(days=7)).strftime(
-            '%Y-%m-%d')  # one week back to ensure they have the data
+            '%Y-%d-%m')  # one week back to ensure they have the data
         twenty_years_ago_formatted = (
                 self._date_of_simulation_start - relativedelta(years=20) - relativedelta(days=7)).strftime(
-            '%Y-%m-%d')  # 20 year lookback, TODO - can make lookback window param in future
+            '%Y-%d-%m')  # 20 year lookback, TODO - can make lookback window param in future
+
         meteo_api_url = f'https://archive-api.open-meteo.com/v1/archive?latitude={self._latitude}&longitude={self._longitude}&start_date={twenty_years_ago_formatted}&end_date={today_date_formatted}&hourly=direct_normal_irradiance&timezone=America%2FNew_York'
         meteo_response = requests.get(meteo_api_url)
         meteo_response = meteo_response.json()
+
 
         self._meteo_weather_data["DNI_data"] = meteo_response["hourly"]["direct_normal_irradiance"]
         self._meteo_weather_data["timestamps"] = meteo_response["hourly"]["time"]
@@ -210,7 +212,7 @@ class SimulatedWorld:
             self._longitude = geo_data["lng"]
             print("Fetched Coordinates from address input")
         except:
-            raise LookupError
+            raise LookupError("Geo lat_lon lookup failed")
 
     def calculate_output_file_header(self):
         """
