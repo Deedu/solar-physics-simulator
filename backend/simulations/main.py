@@ -533,131 +533,132 @@ async def create_simulation(incoming_simulation_parameters: Annotated[Simulation
                     }
                 }
             }},
-        "brightest-city-on-earth": {"summary": "A 1 week simulation - **in Yuma, AZ** - the brightest city on earth",
-                                    "description": "**super sunny example** - 7 days of modelling the system with a lot of sun",
-                                    "value": {
-                                        "address": "One City Plaza, Yuma, AZ 85364",
-                                        "optional_date_of_simulation": "10-July-2023",
-                                        "simulation_uuid": "super_sunny_city_example",
-                                        "num_hours_to_simulate": 170,
-                                        "solar": {
-                                            "length": 4.5,
-                                            "width": 2.5,
-                                            "solar_efficiency": 0.15
-                                        },
-                                        "water_pump": {
-                                            "max_flow_rate": 45,
-                                            "maximum_temp_difference_between_water_incoming_and_outgoing_solar": 10,
-                                            "minimum_temp_difference_between_water_incoming_and_outgoing_solar": 2
-                                        },
-                                        "water_container": {
-                                            "water_capacity": 200,
-                                            "percent_of_thermal_energy_absorbed_from_pipes": 0.85,
-                                            "percent_of_thermal_energy_lost_to_waste_per_hour": 0.02,
-                                            "temperature_of_external_water_source": 7,
-                                            "efficiency_of_traditional_boiler": 0.75,
-                                            "minimum_average_water_temperature": 50,
-                                            "consumption_pattern": {
-                                                "00:00": {
-                                                    "water_used": 0,
-                                                    "average_temperature_of_water_used": 0
-                                                },
-                                                "01:00": {
-                                                    "water_used": 0,
-                                                    "average_temperature_of_water_used": 0
-                                                },
-                                                "02:00": {
-                                                    "water_used": 0,
-                                                    "average_temperature_of_water_used": 0
-                                                },
-                                                "03:00": {
-                                                    "water_used": 0,
-                                                    "average_temperature_of_water_used": 0
-                                                },
-                                                "04:00": {
-                                                    "water_used": 0,
-                                                    "average_temperature_of_water_used": 0
-                                                },
-                                                "05:00": {
-                                                    "water_used": 0,
-                                                    "average_temperature_of_water_used": 0
-                                                },
-                                                "06:00": {
-                                                    "water_used": 0,
-                                                    "average_temperature_of_water_used": 0
-                                                },
-                                                "07:00": {
-                                                    "water_used": 55,
-                                                    "average_temperature_of_water_used": 38
-                                                },
-                                                "08:00": {
-                                                    "water_used": 10,
-                                                    "average_temperature_of_water_used": 50
-                                                },
-                                                "09:00": {
-                                                    "water_used": 10,
-                                                    "average_temperature_of_water_used": 50
-                                                },
-                                                "10:00": {
-                                                    "water_used": 20,
-                                                    "average_temperature_of_water_used": 30
-                                                },
-                                                "11:00": {
-                                                    "water_used": 0,
-                                                    "average_temperature_of_water_used": 50
-                                                },
-                                                "12:00": {
-                                                    "water_used": 60,
-                                                    "average_temperature_of_water_used": 15
-                                                },
-                                                "13:00": {
-                                                    "water_used": 0,
-                                                    "average_temperature_of_water_used": 50
-                                                },
-                                                "14:00": {
-                                                    "water_used": 0,
-                                                    "average_temperature_of_water_used": 50
-                                                },
-                                                "15:00": {
-                                                    "water_used": 5,
-                                                    "average_temperature_of_water_used": 50
-                                                },
-                                                "16:00": {
-                                                    "water_used": 10,
-                                                    "average_temperature_of_water_used": 50
-                                                },
-                                                "17:00": {
-                                                    "water_used": 10,
-                                                    "average_temperature_of_water_used": 50
-                                                },
-                                                "18:00": {
-                                                    "water_used": 10,
-                                                    "average_temperature_of_water_used": 50
-                                                },
-                                                "19:00": {
-                                                    "water_used": 35,
-                                                    "average_temperature_of_water_used": 65
-                                                },
-                                                "20:00": {
-                                                    "water_used": 10,
-                                                    "average_temperature_of_water_used": 50
-                                                },
-                                                "21:00": {
-                                                    "water_used": 10,
-                                                    "average_temperature_of_water_used": 50
-                                                },
-                                                "22:00": {
-                                                    "water_used": 0,
-                                                    "average_temperature_of_water_used": 50
-                                                },
-                                                "23:00": {
-                                                    "water_used": 0,
-                                                    "average_temperature_of_water_used": 50
-                                                }
 
-                                            }
-                                        }
-                                    }},
+        "one-day-model": {"summary": "A 1 day simulation - standard/default values",
+                          "description": "**standard example 1 day** - 1 day of modelling the system with reasonable values",
+                          "value": {
+                              "address": "6405 S 3000 E, Suite 300 Holladay, UT",
+                              "optional_date_of_simulation": "10-March-2023",
+                              "simulation_uuid": "default_example_one_day_timeframe",
+                              "num_hours_to_simulate": 25,
+                              "solar": {
+                                  "length": 4.5,
+                                  "width": 2,
+                                  "solar_efficiency": 0.15
+                              },
+                              "water_pump": {
+                                  "max_flow_rate": 20,
+                                  "maximum_temp_difference_between_water_incoming_and_outgoing_solar": 4,
+                                  "minimum_temp_difference_between_water_incoming_and_outgoing_solar": 2
+                              },
+                              "water_container": {
+                                  "water_capacity": 200,
+                                  "percent_of_thermal_energy_absorbed_from_pipes": 0.85,
+                                  "percent_of_thermal_energy_lost_to_waste_per_hour": 0.02,
+                                  "temperature_of_external_water_source": 7,
+                                  "efficiency_of_traditional_boiler": 0.75,
+                                  "minimum_average_water_temperature": 50,
+                                  "consumption_pattern": {
+                                      "00:00": {
+                                          "water_used": 0,
+                                          "average_temperature_of_water_used": 0
+                                      },
+                                      "01:00": {
+                                          "water_used": 0,
+                                          "average_temperature_of_water_used": 0
+                                      },
+                                      "02:00": {
+                                          "water_used": 0,
+                                          "average_temperature_of_water_used": 0
+                                      },
+                                      "03:00": {
+                                          "water_used": 0,
+                                          "average_temperature_of_water_used": 0
+                                      },
+                                      "04:00": {
+                                          "water_used": 0,
+                                          "average_temperature_of_water_used": 0
+                                      },
+                                      "05:00": {
+                                          "water_used": 0,
+                                          "average_temperature_of_water_used": 0
+                                      },
+                                      "06:00": {
+                                          "water_used": 0,
+                                          "average_temperature_of_water_used": 0
+                                      },
+                                      "07:00": {
+                                          "water_used": 55,
+                                          "average_temperature_of_water_used": 38
+                                      },
+                                      "08:00": {
+                                          "water_used": 10,
+                                          "average_temperature_of_water_used": 50
+                                      },
+                                      "09:00": {
+                                          "water_used": 10,
+                                          "average_temperature_of_water_used": 50
+                                      },
+                                      "10:00": {
+                                          "water_used": 20,
+                                          "average_temperature_of_water_used": 30
+                                      },
+                                      "11:00": {
+                                          "water_used": 0,
+                                          "average_temperature_of_water_used": 50
+                                      },
+                                      "12:00": {
+                                          "water_used": 60,
+                                          "average_temperature_of_water_used": 15
+                                      },
+                                      "13:00": {
+                                          "water_used": 0,
+                                          "average_temperature_of_water_used": 50
+                                      },
+                                      "14:00": {
+                                          "water_used": 0,
+                                          "average_temperature_of_water_used": 50
+                                      },
+                                      "15:00": {
+                                          "water_used": 5,
+                                          "average_temperature_of_water_used": 50
+                                      },
+                                      "16:00": {
+                                          "water_used": 10,
+                                          "average_temperature_of_water_used": 50
+                                      },
+                                      "17:00": {
+                                          "water_used": 10,
+                                          "average_temperature_of_water_used": 50
+                                      },
+                                      "18:00": {
+                                          "water_used": 10,
+                                          "average_temperature_of_water_used": 50
+                                      },
+                                      "19:00": {
+                                          "water_used": 35,
+                                          "average_temperature_of_water_used": 65
+                                      },
+                                      "20:00": {
+                                          "water_used": 10,
+                                          "average_temperature_of_water_used": 50
+                                      },
+                                      "21:00": {
+                                          "water_used": 10,
+                                          "average_temperature_of_water_used": 50
+                                      },
+                                      "22:00": {
+                                          "water_used": 0,
+                                          "average_temperature_of_water_used": 50
+                                      },
+                                      "23:00": {
+                                          "water_used": 0,
+                                          "average_temperature_of_water_used": 50
+                                      }
+
+                                  }
+                              }
+                          }},
         "one-month-model": {"summary": "A 1 month simulation - standard/default values",
                             "description": "**standard example 1 month** - 1 month of modelling the system with reasonable values",
                             "value": {
@@ -908,131 +909,258 @@ async def create_simulation(incoming_simulation_parameters: Annotated[Simulation
                                    }
                                }
                            }},
-        "one-day-model": {"summary": "A 1 day simulation - standard/default values",
-                          "description": "**standard example 1 day** - 1 day of modelling the system with reasonable values",
-                          "value": {
-                              "address": "6405 S 3000 E, Suite 300 Holladay, UT",
-                              "optional_date_of_simulation": "10-March-2023",
-                              "simulation_uuid": "default_example_one_day_timeframe",
-                              "num_hours_to_simulate": 25,
-                              "solar": {
-                                  "length": 4.5,
-                                  "width": 2,
-                                  "solar_efficiency": 0.15
-                              },
-                              "water_pump": {
-                                  "max_flow_rate": 20,
-                                  "maximum_temp_difference_between_water_incoming_and_outgoing_solar": 4,
-                                  "minimum_temp_difference_between_water_incoming_and_outgoing_solar": 2
-                              },
-                              "water_container": {
-                                  "water_capacity": 200,
-                                  "percent_of_thermal_energy_absorbed_from_pipes": 0.85,
-                                  "percent_of_thermal_energy_lost_to_waste_per_hour": 0.02,
-                                  "temperature_of_external_water_source": 7,
-                                  "efficiency_of_traditional_boiler": 0.75,
-                                  "minimum_average_water_temperature": 50,
-                                  "consumption_pattern": {
-                                      "00:00": {
-                                          "water_used": 0,
-                                          "average_temperature_of_water_used": 0
-                                      },
-                                      "01:00": {
-                                          "water_used": 0,
-                                          "average_temperature_of_water_used": 0
-                                      },
-                                      "02:00": {
-                                          "water_used": 0,
-                                          "average_temperature_of_water_used": 0
-                                      },
-                                      "03:00": {
-                                          "water_used": 0,
-                                          "average_temperature_of_water_used": 0
-                                      },
-                                      "04:00": {
-                                          "water_used": 0,
-                                          "average_temperature_of_water_used": 0
-                                      },
-                                      "05:00": {
-                                          "water_used": 0,
-                                          "average_temperature_of_water_used": 0
-                                      },
-                                      "06:00": {
-                                          "water_used": 0,
-                                          "average_temperature_of_water_used": 0
-                                      },
-                                      "07:00": {
-                                          "water_used": 55,
-                                          "average_temperature_of_water_used": 38
-                                      },
-                                      "08:00": {
-                                          "water_used": 10,
-                                          "average_temperature_of_water_used": 50
-                                      },
-                                      "09:00": {
-                                          "water_used": 10,
-                                          "average_temperature_of_water_used": 50
-                                      },
-                                      "10:00": {
-                                          "water_used": 20,
-                                          "average_temperature_of_water_used": 30
-                                      },
-                                      "11:00": {
-                                          "water_used": 0,
-                                          "average_temperature_of_water_used": 50
-                                      },
-                                      "12:00": {
-                                          "water_used": 60,
-                                          "average_temperature_of_water_used": 15
-                                      },
-                                      "13:00": {
-                                          "water_used": 0,
-                                          "average_temperature_of_water_used": 50
-                                      },
-                                      "14:00": {
-                                          "water_used": 0,
-                                          "average_temperature_of_water_used": 50
-                                      },
-                                      "15:00": {
-                                          "water_used": 5,
-                                          "average_temperature_of_water_used": 50
-                                      },
-                                      "16:00": {
-                                          "water_used": 10,
-                                          "average_temperature_of_water_used": 50
-                                      },
-                                      "17:00": {
-                                          "water_used": 10,
-                                          "average_temperature_of_water_used": 50
-                                      },
-                                      "18:00": {
-                                          "water_used": 10,
-                                          "average_temperature_of_water_used": 50
-                                      },
-                                      "19:00": {
-                                          "water_used": 35,
-                                          "average_temperature_of_water_used": 65
-                                      },
-                                      "20:00": {
-                                          "water_used": 10,
-                                          "average_temperature_of_water_used": 50
-                                      },
-                                      "21:00": {
-                                          "water_used": 10,
-                                          "average_temperature_of_water_used": 50
-                                      },
-                                      "22:00": {
-                                          "water_used": 0,
-                                          "average_temperature_of_water_used": 50
-                                      },
-                                      "23:00": {
-                                          "water_used": 0,
-                                          "average_temperature_of_water_used": 50
-                                      }
+        "brightest-city-on-earth": {"summary": "A 1 Year simulation - **in Yuma, AZ** - the brightest city on earth",
+                                    "description": "**super sunny example** - 1 Year of modelling the system with a lot of sun",
+                                    "value": {
+                                        "address": "One City Plaza, Yuma, AZ 85364",
+                                        "optional_date_of_simulation": "10-July-2023",
+                                        "simulation_uuid": "super_sunny_city_example",
+                                        "num_hours_to_simulate": 9000,
+                                        "solar": {
+                                            "length": 4.5,
+                                            "width": 2.5,
+                                            "solar_efficiency": 0.15
+                                        },
+                                        "water_pump": {
+                                            "max_flow_rate": 45,
+                                            "maximum_temp_difference_between_water_incoming_and_outgoing_solar": 10,
+                                            "minimum_temp_difference_between_water_incoming_and_outgoing_solar": 2
+                                        },
+                                        "water_container": {
+                                            "water_capacity": 200,
+                                            "percent_of_thermal_energy_absorbed_from_pipes": 0.85,
+                                            "percent_of_thermal_energy_lost_to_waste_per_hour": 0.02,
+                                            "temperature_of_external_water_source": 7,
+                                            "efficiency_of_traditional_boiler": 0.75,
+                                            "minimum_average_water_temperature": 50,
+                                            "consumption_pattern": {
+                                                "00:00": {
+                                                    "water_used": 0,
+                                                    "average_temperature_of_water_used": 0
+                                                },
+                                                "01:00": {
+                                                    "water_used": 0,
+                                                    "average_temperature_of_water_used": 0
+                                                },
+                                                "02:00": {
+                                                    "water_used": 0,
+                                                    "average_temperature_of_water_used": 0
+                                                },
+                                                "03:00": {
+                                                    "water_used": 0,
+                                                    "average_temperature_of_water_used": 0
+                                                },
+                                                "04:00": {
+                                                    "water_used": 0,
+                                                    "average_temperature_of_water_used": 0
+                                                },
+                                                "05:00": {
+                                                    "water_used": 0,
+                                                    "average_temperature_of_water_used": 0
+                                                },
+                                                "06:00": {
+                                                    "water_used": 0,
+                                                    "average_temperature_of_water_used": 0
+                                                },
+                                                "07:00": {
+                                                    "water_used": 55,
+                                                    "average_temperature_of_water_used": 38
+                                                },
+                                                "08:00": {
+                                                    "water_used": 10,
+                                                    "average_temperature_of_water_used": 50
+                                                },
+                                                "09:00": {
+                                                    "water_used": 10,
+                                                    "average_temperature_of_water_used": 50
+                                                },
+                                                "10:00": {
+                                                    "water_used": 20,
+                                                    "average_temperature_of_water_used": 30
+                                                },
+                                                "11:00": {
+                                                    "water_used": 0,
+                                                    "average_temperature_of_water_used": 50
+                                                },
+                                                "12:00": {
+                                                    "water_used": 60,
+                                                    "average_temperature_of_water_used": 15
+                                                },
+                                                "13:00": {
+                                                    "water_used": 0,
+                                                    "average_temperature_of_water_used": 50
+                                                },
+                                                "14:00": {
+                                                    "water_used": 0,
+                                                    "average_temperature_of_water_used": 50
+                                                },
+                                                "15:00": {
+                                                    "water_used": 5,
+                                                    "average_temperature_of_water_used": 50
+                                                },
+                                                "16:00": {
+                                                    "water_used": 10,
+                                                    "average_temperature_of_water_used": 50
+                                                },
+                                                "17:00": {
+                                                    "water_used": 10,
+                                                    "average_temperature_of_water_used": 50
+                                                },
+                                                "18:00": {
+                                                    "water_used": 10,
+                                                    "average_temperature_of_water_used": 50
+                                                },
+                                                "19:00": {
+                                                    "water_used": 35,
+                                                    "average_temperature_of_water_used": 65
+                                                },
+                                                "20:00": {
+                                                    "water_used": 10,
+                                                    "average_temperature_of_water_used": 50
+                                                },
+                                                "21:00": {
+                                                    "water_used": 10,
+                                                    "average_temperature_of_water_used": 50
+                                                },
+                                                "22:00": {
+                                                    "water_used": 0,
+                                                    "average_temperature_of_water_used": 50
+                                                },
+                                                "23:00": {
+                                                    "water_used": 0,
+                                                    "average_temperature_of_water_used": 50
+                                                }
 
-                                  }
-                              }
-                          }}
+                                            }
+                                        }
+                                    }},
+        "darkest-city-on-earth": {
+            "summary": "A 1 Year simulation - **in Juneau, AK** - one of the darkest cities on earth",
+            "description": "**super dark example** - 1 Year of modelling the system with litle sun and lots of cold",
+            "value": {
+                "address": "55 S Seward St, Juneau, AK 99801",
+                "optional_date_of_simulation": "10-July-2023",
+                "simulation_uuid": "super_sunny_city_example",
+                "num_hours_to_simulate": 9000,
+                "solar": {
+                    "length": 4.5,
+                    "width": 2.5,
+                    "solar_efficiency": 0.15
+                },
+                "water_pump": {
+                    "max_flow_rate": 45,
+                    "maximum_temp_difference_between_water_incoming_and_outgoing_solar": 10,
+                    "minimum_temp_difference_between_water_incoming_and_outgoing_solar": 2
+                },
+                "water_container": {
+                    "water_capacity": 200,
+                    "percent_of_thermal_energy_absorbed_from_pipes": 0.85,
+                    "percent_of_thermal_energy_lost_to_waste_per_hour": 0.02,
+                    "temperature_of_external_water_source": 7,
+                    "efficiency_of_traditional_boiler": 0.75,
+                    "minimum_average_water_temperature": 50,
+                    "consumption_pattern": {
+                        "00:00": {
+                            "water_used": 0,
+                            "average_temperature_of_water_used": 0
+                        },
+                        "01:00": {
+                            "water_used": 0,
+                            "average_temperature_of_water_used": 0
+                        },
+                        "02:00": {
+                            "water_used": 0,
+                            "average_temperature_of_water_used": 0
+                        },
+                        "03:00": {
+                            "water_used": 0,
+                            "average_temperature_of_water_used": 0
+                        },
+                        "04:00": {
+                            "water_used": 0,
+                            "average_temperature_of_water_used": 0
+                        },
+                        "05:00": {
+                            "water_used": 0,
+                            "average_temperature_of_water_used": 0
+                        },
+                        "06:00": {
+                            "water_used": 0,
+                            "average_temperature_of_water_used": 0
+                        },
+                        "07:00": {
+                            "water_used": 55,
+                            "average_temperature_of_water_used": 38
+                        },
+                        "08:00": {
+                            "water_used": 10,
+                            "average_temperature_of_water_used": 50
+                        },
+                        "09:00": {
+                            "water_used": 10,
+                            "average_temperature_of_water_used": 50
+                        },
+                        "10:00": {
+                            "water_used": 20,
+                            "average_temperature_of_water_used": 30
+                        },
+                        "11:00": {
+                            "water_used": 0,
+                            "average_temperature_of_water_used": 50
+                        },
+                        "12:00": {
+                            "water_used": 60,
+                            "average_temperature_of_water_used": 15
+                        },
+                        "13:00": {
+                            "water_used": 0,
+                            "average_temperature_of_water_used": 50
+                        },
+                        "14:00": {
+                            "water_used": 0,
+                            "average_temperature_of_water_used": 50
+                        },
+                        "15:00": {
+                            "water_used": 5,
+                            "average_temperature_of_water_used": 50
+                        },
+                        "16:00": {
+                            "water_used": 10,
+                            "average_temperature_of_water_used": 50
+                        },
+                        "17:00": {
+                            "water_used": 10,
+                            "average_temperature_of_water_used": 50
+                        },
+                        "18:00": {
+                            "water_used": 10,
+                            "average_temperature_of_water_used": 50
+                        },
+                        "19:00": {
+                            "water_used": 35,
+                            "average_temperature_of_water_used": 65
+                        },
+                        "20:00": {
+                            "water_used": 10,
+                            "average_temperature_of_water_used": 50
+                        },
+                        "21:00": {
+                            "water_used": 10,
+                            "average_temperature_of_water_used": 50
+                        },
+                        "22:00": {
+                            "water_used": 0,
+                            "average_temperature_of_water_used": 50
+                        },
+                        "23:00": {
+                            "water_used": 0,
+                            "average_temperature_of_water_used": 50
+                        }
+
+                    }
+                }
+            }}
+
     })]):
     # TODO - Implement marshmallow or similar for schema enforcement and sanitization
     print("Simulation Starting - Received Input Below")

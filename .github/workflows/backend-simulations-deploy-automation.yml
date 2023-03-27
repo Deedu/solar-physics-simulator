@@ -1,4 +1,4 @@
-name: Simulation Processing Python Backend Prod - Deploy python backend to Google Cloud Run on push to prod
+name: Simulation Processing Backend CI/CD Pipeline
 'on':
   push:
     branches:
@@ -92,7 +92,9 @@ jobs:
     # runs within your Docker container
     container:
       image: us-docker.pkg.dev/solar-phyics-simulator/simulation-processing-artifact-repo/simulation-processing-backend:latest
-
+      credentials:
+        username: _json_key
+        password: '${{ secrets.GCP_SERVICE_ACCOUNT_SIMULATIONS }}'
     steps:
 
       # Now in deployment
