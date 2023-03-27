@@ -30,6 +30,11 @@ The idea for the system is fairly straightforward. Model a system that:
 * Optimizing hardware/system design
   * How big should solar panels be relative to water tank, how powerful should the pump be, etc.
 ---
+# Video Walkthrough
+
+[![Video Walkthrough](https://storage.googleapis.com/solar-physics-simulator-bucket/video-walkthrough.mp4)]
+
+---
 ## Production Architecture
 
 ![Diagram showing the various services that produce the simulation](./architecture-graphs/solar_physics_simulator.png "Architecture Diagram")
@@ -57,6 +62,7 @@ Time got to me LOL. Simple flask template and Google's BI tool Looker will have 
   * Stricter/better use of boiler, right now only kicks in after water usage but could temperature could decline overnight as well
 * Metrics
   * More detailed tracking of loss/inefficiency in the system
+  * Converting to most relevant units (e.g. kWh instead of J)
 
 ---
 
@@ -65,10 +71,10 @@ Time got to me LOL. Simple flask template and Google's BI tool Looker will have 
 1. Running FastAPI Python app in a container (deployed on cloud run)
 2. Request comes in from client, parse that to get parameters for a solar water heater system. The objects that represent the system are built and various logging/admin functions are performed. This happens in the [Simulated World object](/backend/simulations/simulationObjects/SimulatedWorld.py) 
 3. That triggers [Simulated World -> run_entire_simulation()](/backend/simulations/simulationObjects/SimulatedWorld.py) , which kicks off the next few steps.
-4. Address of solar panel system is converted to lat_lon, then geographical data on DNI values is collected
-5. Historical average of past 20 years is used as expected DNI value on go forward basis
+4. Address of solar panel system is converted to lat_lon, then geographical data on DNI values is collected (external API calls)
+5. Historical average of past 20 years of DNI data is used as expected DNI value on go forward basis
 6. System adds 1 hour of DNI Energy into [Solar Collector object](/backend/simulations/simulationObjects/SolarCollector.py) (factors in efficiency) and then gets heat energy exchanged into water flowing through panel (factors in flow rate of water and energy collected) -> raises water temp in pipes
 7. Difference in energy between pipes and water tank gets absorbed into [Water Container object](/backend/simulations/simulationObjects/WaterContainer.py)
 8. Water demands are also applied -> e.g. taking a shower. This factors in temp and volume to get energy lost from water heater
 9. If after summing up all energy in/out, the tank is below the safe operating temp of 50ºc, then heater kicks in
-10. Water pump [Water Pump object](/backend/simulations/simulationObjects/WaterPump.py) speed is increase or decreased to try to avoid making the temp difference between solar water in and solar water out too large
+10. [Water Pump object](/backend/simulations/simulationObjects/WaterPump.py) speed is increase or decreased to try to avoid making the temp difference between solar water in and solar water out too large
