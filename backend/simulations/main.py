@@ -1040,7 +1040,7 @@ async def create_simulation(incoming_simulation_parameters: Annotated[Simulation
             "value": {
                 "address": "55 S Seward St, Juneau, AK 99801",
                 "optional_date_of_simulation": "10-July-2023",
-                "simulation_uuid": "super_sunny_city_example",
+                "simulation_uuid": "super_dark_city_example",
                 "num_hours_to_simulate": 9000,
                 "solar": {
                     "length": 4.5,
