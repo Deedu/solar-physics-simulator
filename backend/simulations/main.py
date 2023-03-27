@@ -32,7 +32,7 @@ async def return_home_page(request: Request):
 @app.post("/createSimulation")
 async def create_simulation(incoming_simulation_parameters: Annotated[SimulationIncomingRequest, Body(
     examples={
-        "normal": {"summary": "A 1 week simulation",
+        "normal": {"summary": "A 1 Month simulation from beautiful Holladay UT",
                    "description": "**standard example** - 7 days of modelling the system with reasonable values",
                    "value": {
                        "address": " 6405 S 3000 E, Suite 300 Holladay, UT",
@@ -157,13 +157,13 @@ async def create_simulation(incoming_simulation_parameters: Annotated[Simulation
                            }
                        }
                    }},
-        "super-solar": {"summary": "A 1 week simulation - **with a gigantic solar panel**",
-                        "description": "**super solar example** - 7 days of modelling the system with a huge solar panel",
+        "super-solar": {"summary": "A 1 Year simulation - **with a gigantic solar panel**",
+                        "description": "**super solar example** - 1 Yar of modelling the system with a huge solar panel",
                         "value": {
                             "address": " 6405 S 3000 E, Suite 300 Holladay, UT",
                             "optional_date_of_simulation": "10-March-2023",
                             "simulation_uuid": "super_solar_example",
-                            "num_hours_to_simulate": 170,
+                            "num_hours_to_simulate": 9000,
                             "solar": {
                                 "length": 10,
                                 "width": 10,
@@ -282,13 +282,13 @@ async def create_simulation(incoming_simulation_parameters: Annotated[Simulation
                                 }
                             }
                         }},
-        "gigantic-tank": {"summary": "A 1 week simulation - **with a gigantic water tank**",
-                          "description": "**super tank example** - 7 days of modelling the system with a huge water tank",
+        "gigantic-tank": {"summary": "A 1 Year simulation - **with a gigantic water tank**",
+                          "description": "**super tank example** - 1 Year of modelling the system with a huge water tank",
                           "value": {
                               "address": " 6405 S 3000 E, Suite 300 Holladay, UT",
                               "optional_date_of_simulation": "10-March-2023",
                               "simulation_uuid": "super_tank_example",
-                              "num_hours_to_simulate": 170,
+                              "num_hours_to_simulate": 9000,
                               "solar": {
                                   "length": 4.5,
                                   "width": 2.5,
