@@ -141,7 +141,6 @@ class SimulatedWorld:
 
     def run_one_hourly_iteration_of_simulation(self):
         # Filter Historical Dataset to get an average to use today
-        # print(self._current_time_in_simulation)
         current_hour_of_day = self._current_time_in_simulation[-5:]  # e.g. 01:00
         month_day_hour_formatted = self._current_time_in_simulation[5:]  # e.g. 03-10T22:00
         same_day_time_all_years_in_dataset_mask = self._pandas_data.index.str.contains(month_day_hour_formatted)
@@ -167,14 +166,8 @@ class SimulatedWorld:
         self._water_container.run_hour_of_usage(temperature_of_water_in_pipes, flow_rate_for_the_hour,
                                                 current_hour_of_day=current_hour_of_day)
 
-        # Adjust water flow from temperature difference between what is in pipes and what is in solar panel.
-        # print(
-        #     f"Starting flow rate: {flow_rate_for_the_hour}, starting temp into solar {starting_temperature_into_solar}, ending temp in pipes {temperature_of_water_in_pipes}, ending temp water container {self._water_container.outgoing_water_temperature}")
-        # self._water_pump.adjust_flow_to_current_state(self._water_container.outgoing_water_temperature,
-        #                                               temperature_of_water_in_pipes)
-
-        # print(same_day_time_all_years_in_dataset)
-        # print(f"Mean DNI for {month_day_hour_formatted} is: {dni_value_for_hour_in_simulation}")
+        # Adjust water pump to have new updated speed
+        self._water_pump.adjust_flow_to_current_state()
 
     def get_weather_data(self):
         """
